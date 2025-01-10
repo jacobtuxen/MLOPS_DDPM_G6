@@ -4,7 +4,6 @@ from pathlib import Path
 from typing import Any
 
 import torch
-from loguru import logger
 from PIL import Image
 
 from torch.utils.data import Dataset
@@ -60,4 +59,3 @@ if __name__ == "__main__":
     raw_data_path = Path("data/raw")
     preprocessed_path = Path("data/processed")
     Pokemon.preprocess(raw_data_path, preprocessed_path)
-    logger.info(f"Data preprocessed and saved to {preprocessed_path}")
