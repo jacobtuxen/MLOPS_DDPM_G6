@@ -6,19 +6,19 @@ from diffusers import DDPMScheduler
 from diffusers.optimization import get_cosine_schedule_with_warmup
 from model import DDPM
 
-from data import Pokemon
 
 DEVICE = torch.device("cuda" if torch.cuda.is_available() else "mps" if torch.backends.mps.is_available() else "cpu")
 
 
 def train(
-    unet: torch.nn.Module = DDPM(), lr: float = 1e-3, lr_warmup_steps: int = 10, batch_size: int = 32, epochs: int = 10
+    lr: float = 1e-3, lr_warmup_steps: int = 10, batch_size: int = 32, epochs: int = 10
 ) -> None:
     """Train a model on pokemon images."""
     print(f"{lr=}, {batch_size=}, {epochs=}")
-
-    model = unet.to(DEVICE)
-    train_set, _ = Pokemon()
+    
+    ddpm = DDPM()
+    model = ddpm.unet.to(DEVICE)
+    train_set = torch.load("data/processed/images.pt")
 
     train_dataloader = torch.utils.data.DataLoader(train_set, batch_size=batch_size)
 
@@ -36,7 +36,7 @@ def train(
         model.train()
 
         for step, batch in enumerate(train_dataloader):
-            clean_images = batch["images"]
+            clean_images = batch.to(DEVICE)
             # Sample noise to add to the images
             noise = torch.randn(clean_images.shape).to(clean_images.device)
             bs = clean_images.shape[0]
@@ -71,4 +71,4 @@ def train(
 
 
 if __name__ == "__main__":
-    typer.run(train)
+    train()
