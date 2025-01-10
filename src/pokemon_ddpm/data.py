@@ -1,29 +1,62 @@
 from pathlib import Path
-
-import typer
+# import typer
 from torch.utils.data import Dataset
+import torch
+import glob
+from PIL import Image
+from typing import Any, Tuple
+import os
+from loguru import logger
+from torchvision import transforms
 
 
-class MyDataset(Dataset):
+
+class Pokemon(Dataset):
     """My custom dataset."""
 
-    def __init__(self, raw_data_path: Path) -> None:
+    def __init__(self, raw_data_path: Path, transform: Any = None) -> None:
         self.data_path = raw_data_path
+        self.transform = transform
+
+        self.images = torch.load(self.data_path)
 
     def __len__(self) -> int:
         """Return the length of the dataset."""
+        return len(self.images)
 
     def __getitem__(self, index: int):
         """Return a given sample from the dataset."""
+        image = self.images[index]
 
-    def preprocess(self, output_folder: Path) -> None:
+        if self.transform:
+            image = self.transform(image)
+
+        return image
+
+    def preprocess(raw_data_path: Path, preprocessed_path: Path) -> None:
         """Preprocess the raw data and save it to the output folder."""
+        os.makedirs(preprocessed_path, exist_ok=True)
 
-def preprocess(raw_data_path: Path, output_folder: Path) -> None:
-    print("Preprocessing data...")
-    dataset = MyDataset(raw_data_path)
-    dataset.preprocess(output_folder)
+        transform = transforms.Compose([
+            transforms.Resize((32, 32)),
+            transforms.ToTensor(),
+            transforms.Normalize(mean=[0.5, 0.5, 0.5], std=[0.5, 0.5, 0.5])
+        ])
+        images = []
+        
+        for raw_path in glob.glob(f"{raw_data_path}/*.jpg"):
+            with Image.open(raw_path) as img:
+                tensor = transform(img)
+                images.append(tensor)
+            
+        images = torch.stack(images)
+        torch.save(images, f"{preprocessed_path}/images.pt")
+
 
 
 if __name__ == "__main__":
-    typer.run(preprocess)
+    raw_data_path = Path("data/raw/pokemon_jpg")  
+    preprocessed_path = Path("data/processed")  
+    Pokemon.preprocess(raw_data_path, preprocessed_path)
+    logger.info(f"Data preprocessed and saved to {preprocessed_path}")
+    
