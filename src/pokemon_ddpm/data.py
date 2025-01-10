@@ -1,14 +1,15 @@
+import glob
+import os
 from pathlib import Path
+from typing import Any, Tuple
+
+import torch
+from loguru import logger
+from PIL import Image
+
 # import typer
 from torch.utils.data import Dataset
-import torch
-import glob
-from PIL import Image
-from typing import Any, Tuple
-import os
-from loguru import logger
 from torchvision import transforms
-
 
 
 class Pokemon(Dataset):
@@ -33,30 +34,30 @@ class Pokemon(Dataset):
 
         return image
 
-    def preprocess(raw_data_path: Path, preprocessed_path: Path) -> None:
+    def preprocess(self, raw_data_path: Path, preprocessed_path: Path) -> None:
         """Preprocess the raw data and save it to the output folder."""
         os.makedirs(preprocessed_path, exist_ok=True)
 
-        transform = transforms.Compose([
-            transforms.Resize((32, 32)),
-            transforms.ToTensor(),
-            transforms.Normalize(mean=[0.5, 0.5, 0.5], std=[0.5, 0.5, 0.5])
-        ])
+        transform = transforms.Compose(
+            [
+                transforms.Resize((32, 32)),
+                transforms.ToTensor(),
+                transforms.Normalize(mean=[0.5, 0.5, 0.5], std=[0.5, 0.5, 0.5]),
+            ]
+        )
         images = []
-        
+
         for raw_path in glob.glob(f"{raw_data_path}/*.jpg"):
             with Image.open(raw_path) as img:
                 tensor = transform(img)
                 images.append(tensor)
-            
+
         images = torch.stack(images)
         torch.save(images, f"{preprocessed_path}/images.pt")
 
 
-
 if __name__ == "__main__":
-    raw_data_path = Path("data/raw/pokemon_jpg")  
-    preprocessed_path = Path("data/processed")  
+    raw_data_path = Path("data/raw/pokemon_jpg")
+    preprocessed_path = Path("data/processed")
     Pokemon.preprocess(raw_data_path, preprocessed_path)
     logger.info(f"Data preprocessed and saved to {preprocessed_path}")
-    

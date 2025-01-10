@@ -1,6 +1,8 @@
+from pathlib import Path
+
 import matplotlib.pyplot as plt
 import torch
-from pathlib import Path
+
 
 def visualize_datapoints(path: Path) -> None:
     """A simple function that visualizes random datapoints of the dataset."""
@@ -17,9 +19,9 @@ def visualize_datapoints(path: Path) -> None:
     for i, ax in enumerate(axes.flat):
         datapoint = data[torch.randint(0, len(data), (1,)).item()]
         ax.imshow(datapoint.permute(1, 2, 0))  # Assuming the tensor is in (C, H, W) format
-        ax.axis('off')
-        ax.set_title(f'Sample {i+1}')
-    fig.savefig('reports/figures/visualized_datapoints.png')
+        ax.axis("off")
+        ax.set_title(f"Sample {i + 1}")
+    fig.savefig("reports/figures/visualized_datapoints.png")
     plt.tight_layout()
     plt.show()
 

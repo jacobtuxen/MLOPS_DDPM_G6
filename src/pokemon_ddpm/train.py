@@ -1,20 +1,22 @@
+import matplotlib.pyplot as plt
 import torch
 import torch.nn.functional as F
-from diffusers.optimization import get_cosine_schedule_with_warmup
-from diffusers import DDPMScheduler
 import typer
-import matplotlib.pyplot as plt
-
+from diffusers import DDPMScheduler
+from diffusers.optimization import get_cosine_schedule_with_warmup
+from model import DDPM
 
 from data import Pokemon
-from model import DDPM
 
 DEVICE = torch.device("cuda" if torch.cuda.is_available() else "mps" if torch.backends.mps.is_available() else "cpu")
 
-def train(unet: torch.nn.Module = DDPM(), lr: float = 1e-3, lr_warmup_steps: int=10, batch_size: int = 32, epochs: int = 10) -> None:
+
+def train(
+    unet: torch.nn.Module = DDPM(), lr: float = 1e-3, lr_warmup_steps: int = 10, batch_size: int = 32, epochs: int = 10
+) -> None:
     """Train a model on pokemon images."""
     print(f"{lr=}, {batch_size=}, {epochs=}")
-    
+
     model = unet.to(DEVICE)
     train_set, _ = Pokemon()
 
@@ -22,21 +24,19 @@ def train(unet: torch.nn.Module = DDPM(), lr: float = 1e-3, lr_warmup_steps: int
 
     optimizer = torch.optim.AdamW(model.parameters(), lr=lr)
     lr_scheduler = get_cosine_schedule_with_warmup(
-    optimizer=optimizer,
-    num_warmup_steps=lr_warmup_steps,
-    num_training_steps=(len(train_dataloader) * epochs))
+        optimizer=optimizer, num_warmup_steps=lr_warmup_steps, num_training_steps=(len(train_dataloader) * epochs)
+    )
     noise_scheduler = DDPMScheduler(num_train_timesteps=1000)
-
 
     global_step = 0
 
     statistics = {"train_loss": []}
-    
+
     for epoch in range(epochs):
         model.train()
 
         for step, batch in enumerate(train_dataloader):
-            clean_images = batch['images']
+            clean_images = batch["images"]
             # Sample noise to add to the images
             noise = torch.randn(clean_images.shape).to(clean_images.device)
             bs = clean_images.shape[0]
@@ -68,6 +68,7 @@ def train(unet: torch.nn.Module = DDPM(), lr: float = 1e-3, lr_warmup_steps: int
     print("Training complete")
 
     torch.save(model.state_dict(), "models/model.pth")
+
 
 if __name__ == "__main__":
     typer.run(train)
