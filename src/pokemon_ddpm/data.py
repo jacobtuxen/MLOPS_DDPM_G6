@@ -1,19 +1,18 @@
 import glob
 import os
 from pathlib import Path
-from typing import Any, Tuple
+from typing import Any
 
 import torch
 from loguru import logger
 from PIL import Image
 
-# import typer
 from torch.utils.data import Dataset
 from torchvision import transforms
 
 
 class Pokemon(Dataset):
-    """My custom dataset."""
+    """Pokémon sprite dataset."""
 
     def __init__(self, raw_data_path: Path, transform: Any = None) -> None:
         self.data_path = raw_data_path
@@ -53,11 +52,12 @@ class Pokemon(Dataset):
                 images.append(tensor)
 
         images = torch.stack(images)
+        os.makedirs(preprocessed_path, exist_ok=True)
         torch.save(images, f"{preprocessed_path}/images.pt")
 
 
 if __name__ == "__main__":
-    raw_data_path = Path("data/raw/pokemon_jpg")
+    raw_data_path = Path("data/raw")
     preprocessed_path = Path("data/processed")
     Pokemon.preprocess(raw_data_path, preprocessed_path)
     logger.info(f"Data preprocessed and saved to {preprocessed_path}")
