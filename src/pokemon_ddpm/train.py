@@ -7,15 +7,15 @@ import matplotlib.pyplot as plt
 
 
 from data import Pokemon
-from model import model
+from model import DDPM
 
 DEVICE = torch.device("cuda" if torch.cuda.is_available() else "mps" if torch.backends.mps.is_available() else "cpu")
 
-def train(lr: float = 1e-3, lr_warmup_steps: int=10, batch_size: int = 32, epochs: int = 10) -> None:
+def train(unet: torch.nn.Module = DDPM(), lr: float = 1e-3, lr_warmup_steps: int=10, batch_size: int = 32, epochs: int = 10) -> None:
     """Train a model on pokemon images."""
     print(f"{lr=}, {batch_size=}, {epochs=}")
-
-    model = model().to(DEVICE)
+    
+    model = unet.to(DEVICE)
     train_set, _ = Pokemon()
 
     train_dataloader = torch.utils.data.DataLoader(train_set, batch_size=batch_size)
