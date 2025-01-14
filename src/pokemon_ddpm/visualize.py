@@ -26,6 +26,20 @@ def visualize_datapoints(path: Path) -> None:
     plt.show()
 
 
+def model_samples(model, num_samples):
+    """Generate samples from the model."""
+    model.eval()
+    samples = model.sample(num_samples)
+    fig, axes = plt.subplots(1, num_samples, figsize=(15, 6))
+
+    for i, ax in enumerate(axes.flat):
+        ax.imshow(samples[i].permute(1, 2, 0))
+        ax.axis("off")
+        ax.set_title(f"Sample {i + 1}")
+    plt.tight_layout()
+    plt.show()
+
+
 if __name__ == "__main__":
     path = "data/processed/images.pt"
     visualize_datapoints(path)

@@ -5,7 +5,6 @@ from typing import Any
 
 import torch
 from PIL import Image
-
 from torch.utils.data import Dataset
 from torchvision import transforms
 
@@ -16,8 +15,6 @@ class Pokemon(Dataset):
     def __init__(self, raw_data_path: Path, transform: Any = None) -> None:
         self.data_path = raw_data_path
         self.transform = transform
-
-        self.images = torch.load(self.data_path)
 
     def __len__(self) -> int:
         """Return the length of the dataset."""
@@ -58,4 +55,5 @@ class Pokemon(Dataset):
 if __name__ == "__main__":
     raw_data_path = Path("data/raw")
     preprocessed_path = Path("data/processed")
+    Pokemon = Pokemon(raw_data_path, transform=None)
     Pokemon.preprocess(raw_data_path, preprocessed_path)

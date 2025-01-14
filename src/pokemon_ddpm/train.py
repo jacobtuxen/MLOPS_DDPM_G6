@@ -1,25 +1,31 @@
+from pathlib import Path
+
 import matplotlib.pyplot as plt
 import torch
 import torch.nn.functional as F
-import typer
-from diffusers import DDPMScheduler
+from diffusers import DDPMPipeline, DDPMScheduler, UNet2DModel
 from diffusers.optimization import get_cosine_schedule_with_warmup
-from model import DDPM
+from tqdm import tqdm
 
-from data import Pokemon
+from pokemon_ddpm import __PATH_TO_DATA__, __PATH_TO_ROOT__
 
 DEVICE = torch.device("cuda" if torch.cuda.is_available() else "mps" if torch.backends.mps.is_available() else "cpu")
 
 
 def train(
-    unet: torch.nn.Module = DDPM(), lr: float = 1e-3, lr_warmup_steps: int = 10, batch_size: int = 32, epochs: int = 10
+    model=None,
+    lr: float = 1e-3,
+    lr_warmup_steps: int = 10,
+    batch_size: int = 32,
+    epochs: int = 10,
+    save_model: bool = False,
 ) -> None:
     """Train a model on pokemon images."""
-    print(f"{lr=}, {batch_size=}, {epochs=}")
 
-    model = unet.to(DEVICE)
-    train_set, _ = Pokemon()
+    model = model.to(DEVICE)
+    model.train()
 
+    train_set = torch.load(__PATH_TO_DATA__ / "processed" / "images.pt")  # FIX THIS
     train_dataloader = torch.utils.data.DataLoader(train_set, batch_size=batch_size)
 
     optimizer = torch.optim.AdamW(model.parameters(), lr=lr)
@@ -28,47 +34,29 @@ def train(
     )
     noise_scheduler = DDPMScheduler(num_train_timesteps=1000)
 
-    global_step = 0
-
-    statistics = {"train_loss": []}
-
     for epoch in range(epochs):
         model.train()
 
-        for step, batch in enumerate(train_dataloader):
-            clean_images = batch["images"]
-            # Sample noise to add to the images
-            noise = torch.randn(clean_images.shape).to(clean_images.device)
-            bs = clean_images.shape[0]
+        for images in tqdm(train_dataloader, desc="Processing batches"):
+            images = images.to(DEVICE)
+            noise = torch.randn(images.shape, device=DEVICE)
 
-            # Sample a random timestep for each image
-            timesteps = torch.randint(0, noise_scheduler.num_train_timesteps, (bs,), device=clean_images.device).long()
+            timesteps = torch.randint(0, 1000, (images.shape[0],))
+            noisy_images = noise_scheduler.add_noise(images, noise, timesteps)
+            noise_pred = model(noisy_images, timesteps.float(), return_dict=False)[0]
 
-            # Add noise to the clean images according to the noise magnitude at each timestep
-            # (this is the forward diffusion process)
-            noisy_images = noise_scheduler.add_noise(clean_images, noise, timesteps)
-
-            # Predict the noise residuals
-            noise_pred = model(noisy_images, timesteps, return_dict=False)[0]
             loss = F.mse_loss(noise_pred, noise)
             loss.backward()
             optimizer.step()
             lr_scheduler.step()
             optimizer.zero_grad()
-            global_step += 1
+        print(f"Epoch {epoch} Loss: {loss.item()}")  # TODO: Add logging (pref wandb?)
 
-            statistics["train_loss"].append(loss.item())
-
-            if step % 100 == 0:
-                print(f"Epoch {epoch}, iter {step}, loss: {loss.item()}")
-
-            plt.plot(statistics["train_loss"])
-            plt.title("Train loss")
-            plt.savefig("reports/figures/train_loss.png")
-    print("Training complete")
-
-    torch.save(model.state_dict(), "models/model.pth")
+        if save_model:
+            torch.save(model.state_dict(), Path(__PATH_TO_ROOT__) / "models" / "model.pt")
 
 
 if __name__ == "__main__":
-    typer.run(train)
+    unet = UNet2DModel(sample_size=32, in_channels=3, out_channels=3).to(DEVICE)
+    DDPM = DDPMPipeline(unet=unet, scheduler=DDPMScheduler(num_train_timesteps=1000))
+    train(model=unet)

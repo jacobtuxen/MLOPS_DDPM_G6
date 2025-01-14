@@ -1,5 +1,8 @@
 diffusers==0.32.1
-numpy<2
 invoke==2.2.0
+matplotlib==3.10.0
+numpy<2
+Pillow==11.1.0
 torch==2.2.2
+torchvision==0.17.2
 typer==0.15.1
