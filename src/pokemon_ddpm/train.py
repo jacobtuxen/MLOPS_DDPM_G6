@@ -1,8 +1,7 @@
 from pathlib import Path
 
-import matplotlib.pyplot as plt
 import torch
-import torch.nn.functional as F
+import torch.nn.functional as F  # noqa: N812
 from diffusers import DDPMPipeline, DDPMScheduler, UNet2DModel
 from diffusers.optimization import get_cosine_schedule_with_warmup
 from tqdm import tqdm
