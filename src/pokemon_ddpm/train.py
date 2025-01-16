@@ -6,6 +6,8 @@ from pokemon_ddpm.model import get_models
 from diffusers import DDPMScheduler
 from diffusers.optimization import get_cosine_schedule_with_warmup
 from tqdm import tqdm
+from data import PokemonDataset
+from torch.utils.data import Dataset, DataLoader
 
 from pokemon_ddpm import __PATH_TO_DATA__, __PATH_TO_ROOT__
 
@@ -13,20 +15,19 @@ DEVICE = torch.device("cuda" if torch.cuda.is_available() else "mps" if torch.ba
 
 
 def train(
-    model=None,
+    model=None, #fix this
     lr: float = 1e-3,
     lr_warmup_steps: int = 10,
     batch_size: int = 32,
     epochs: int = 10,
     save_model: bool = False,
+    train_set: Dataset = PokemonDataset(__PATH_TO_DATA__),
 ) -> None:
     """Train a model on pokemon images."""
 
     model = model.to(DEVICE)
     model.train()
-
-    train_set = torch.load(__PATH_TO_DATA__ / "processed" / "images.pt")  # FIX THIS
-    train_dataloader = torch.utils.data.DataLoader(train_set, batch_size=batch_size)
+    train_dataloader = DataLoader(train_set, batch_size=batch_size)
 
     optimizer = torch.optim.AdamW(model.parameters(), lr=lr)
     lr_scheduler = get_cosine_schedule_with_warmup(
@@ -58,4 +59,4 @@ def train(
 
 if __name__ == "__main__":
     ddpmp, unet = get_models(model_name=None, device=DEVICE)
-    train(model=unet)
+    train(model=unet, train_set=PokemonDataset(__PATH_TO_DATA__))
