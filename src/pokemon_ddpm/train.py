@@ -7,7 +7,7 @@ from diffusers.optimization import get_cosine_schedule_with_warmup
 from torch.utils.data import DataLoader, Dataset
 from tqdm import tqdm
 
-from data import PokemonDataset
+from pokemon_ddpm.data import PokemonDataset
 from pokemon_ddpm import _PATH_TO_DATA, _PATH_TO_MODELS
 from pokemon_ddpm.model import get_models
 
