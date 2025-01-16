@@ -8,3 +8,4 @@ torchvision==0.17.2
 tqdm==4.67.1
 wandb
 numpy<2.0.0
+dvc==3.59.0
