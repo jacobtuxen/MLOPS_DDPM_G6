@@ -6,13 +6,14 @@ from diffusers import DDPMScheduler
 from diffusers.optimization import get_cosine_schedule_with_warmup
 from torch.utils.data import DataLoader, Dataset
 from tqdm import tqdm
+import wandb
 
 from pokemon_ddpm import _PATH_TO_DATA, _PATH_TO_MODELS
 from pokemon_ddpm.data import PokemonDataset
 from pokemon_ddpm.model import get_models
 
 DEVICE = torch.device("cuda" if torch.cuda.is_available() else "mps" if torch.backends.mps.is_available() else "cpu")
-
+wandb.login()
 
 def train(
     model=None,  # fix this
@@ -22,8 +23,20 @@ def train(
     epochs: int = 10,
     save_model: bool = False,
     train_set: Dataset = PokemonDataset(_PATH_TO_DATA),
+    wandb_active: bool = False,
 ) -> None:
     """Train a model on pokemon images."""
+
+    run = wandb.init(
+        project="pokemon-ddpm",
+        config={
+            "lr": lr,
+            "lr_warmup_steps": lr_warmup_steps,
+            "batch_size": batch_size,
+            "epochs": epochs,
+            "save_model": save_model,
+        },
+    )
 
     model = model.to(DEVICE)
     model.train()
@@ -37,6 +50,7 @@ def train(
 
     for epoch in range(epochs):
         model.train()
+        epoch_loss = 0
 
         for images in tqdm(train_dataloader, desc="Processing batches"):
             images = images.to(DEVICE)
@@ -52,12 +66,43 @@ def train(
             lr_scheduler.step()
             optimizer.zero_grad()
 
+            epoch_loss += loss.item()
+            
+            if wandb_active:
+                wandb.log({
+                    "train/train_loss": loss.item(),
+                    "train/lr": lr_scheduler.get_last_lr()[0],
+                    })
+
         print(f"Epoch {epoch} Loss: {loss.item()}")  # TODO: Add logging (pref wandb?)
 
         if save_model:
             torch.save(model.state_dict(), Path(_PATH_TO_MODELS) / "models" / "model.pt")
+            if wandb_active:
+                wandb.save(str(Path(_PATH_TO_MODELS) / "models" / "model.pt"))
+        
+    wandb.finish()
+
+def sweep_train(config=None):
+    """Function to be executed during a wandb sweep."""
+    with wandb.init(config=config):
+        config = wandb.config
+        ddpmp, unet = get_models(model_name=None, device=DEVICE)
+        train(
+            model=unet,
+            lr=config.lr,
+            lr_warmup_steps=config.lr_warmup_steps,
+            batch_size=config.batch_size,
+            epochs=config.epochs,
+            save_model=config.save_model,
+            train_set=PokemonDataset(_PATH_TO_DATA),
+            wandb_active=True,
+        )
+
 
 
 if __name__ == "__main__":
     ddpmp, unet = get_models(model_name=None, device=DEVICE)
     train(model=unet, train_set=PokemonDataset(_PATH_TO_DATA))
+    sweep_id = wandb.sweep(sweep_config="configs/sweep.yaml", project="pokemon-ddpm")
+    wandb.agent(sweep_id, function=sweep_train)
