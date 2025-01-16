@@ -2,7 +2,8 @@ from pathlib import Path
 
 import torch
 import torch.nn.functional as F  # noqa: N812
-from diffusers import DDPMPipeline, DDPMScheduler, UNet2DModel
+from pokemon_ddpm.model import get_models
+from diffusers import DDPMScheduler
 from diffusers.optimization import get_cosine_schedule_with_warmup
 from tqdm import tqdm
 
@@ -56,6 +57,5 @@ def train(
 
 
 if __name__ == "__main__":
-    unet = UNet2DModel(sample_size=32, in_channels=3, out_channels=3).to(DEVICE)
-    DDPM = DDPMPipeline(unet=unet, scheduler=DDPMScheduler(num_train_timesteps=1000))
+    ddpmp, unet = get_models(model_name=None, device=DEVICE)
     train(model=unet)

@@ -1,6 +1,6 @@
 # TO DO LIST
 
-- [ ] Task 1: Fix model.py currently it is an empty shell/bad unet
+- [x] Task 1: Fix model.py currently it is an empty shell/bad unet
 - [ ] Task 2: Fix data folder, and data.py (maybe remove processed) (Mads)
 - [ ] Task 3: introduce logging to train loop (wandb) (Mads)
 - [ ] Task 4: Train model, probably use HPC (maybe GC after)
@@ -8,6 +8,8 @@
 - [x] Task 6: Linting checks updated to github actions
 - [ ] Task 7: Add unit tests
 - [ ] Task 8: dvc + Move data to GC
+- [ ] Task 9: add hydra
+- [ ] Task 9: Add testing, and GA
 
 
 
