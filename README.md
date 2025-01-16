@@ -6,10 +6,9 @@
 - [ ] Task 4: Train model, probably use HPC (maybe GC after)
 - [ ] Task 5: Downgrade to Pytorch 2.2.2
 - [x] Task 6: Linting checks updated to github actions
-- [ ] Task 7: Add unit tests
+- [x] Task 7: Add unit tests, and GA
 - [ ] Task 8: dvc + Move data to GC
 - [ ] Task 9: add hydra
-- [x] Task 9: Add testing, and GA
 
 
 

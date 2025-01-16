@@ -1,0 +1,6 @@
+hyperparameters:
+  model_name: None
+  lr: 1e-3
+  batch_size: 32
+  epochs: 10
+  save_model: true
