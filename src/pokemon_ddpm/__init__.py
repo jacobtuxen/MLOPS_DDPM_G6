@@ -1,6 +1,6 @@
 import os
 from pathlib import Path
 
-__PATH_TO_ROOT__ = Path(os.path.dirname(os.path.abspath(__file__))).resolve().parent.parent
-__PATH_TO_DATA__ = Path(os.path.join(__PATH_TO_ROOT__, "data"))
-__PATH_TO_MODELS__ = Path(os.path.join(__PATH_TO_ROOT__, "models"))
+_PATH_TO_ROOT = Path(os.path.dirname(os.path.abspath(__file__))).resolve().parent.parent
+_PATH_TO_DATA = Path(os.path.join(_PATH_TO_ROOT, "data"))
+_PATH_TO_MODELS = Path(os.path.join(_PATH_TO_ROOT, "models"))

@@ -9,7 +9,7 @@
 - [ ] Task 7: Add unit tests
 - [ ] Task 8: dvc + Move data to GC
 - [ ] Task 9: add hydra
-- [ ] Task 9: Add testing, and GA
+- [x] Task 9: Add testing, and GA
 
 
 

@@ -2,26 +2,26 @@ from pathlib import Path
 
 import torch
 import torch.nn.functional as F  # noqa: N812
-from pokemon_ddpm.model import get_models
 from diffusers import DDPMScheduler
 from diffusers.optimization import get_cosine_schedule_with_warmup
+from torch.utils.data import DataLoader, Dataset
 from tqdm import tqdm
-from data import PokemonDataset
-from torch.utils.data import Dataset, DataLoader
 
-from pokemon_ddpm import __PATH_TO_DATA__, __PATH_TO_ROOT__
+from data import PokemonDataset
+from pokemon_ddpm import _PATH_TO_DATA, _PATH_TO_MODELS
+from pokemon_ddpm.model import get_models
 
 DEVICE = torch.device("cuda" if torch.cuda.is_available() else "mps" if torch.backends.mps.is_available() else "cpu")
 
 
 def train(
-    model=None, #fix this
+    model=None,  # fix this
     lr: float = 1e-3,
     lr_warmup_steps: int = 10,
     batch_size: int = 32,
     epochs: int = 10,
     save_model: bool = False,
-    train_set: Dataset = PokemonDataset(__PATH_TO_DATA__),
+    train_set: Dataset = PokemonDataset(_PATH_TO_DATA),
 ) -> None:
     """Train a model on pokemon images."""
 
@@ -51,12 +51,13 @@ def train(
             optimizer.step()
             lr_scheduler.step()
             optimizer.zero_grad()
+
         print(f"Epoch {epoch} Loss: {loss.item()}")  # TODO: Add logging (pref wandb?)
 
         if save_model:
-            torch.save(model.state_dict(), Path(__PATH_TO_ROOT__) / "models" / "model.pt")
+            torch.save(model.state_dict(), Path(_PATH_TO_MODELS) / "models" / "model.pt")
 
 
 if __name__ == "__main__":
     ddpmp, unet = get_models(model_name=None, device=DEVICE)
-    train(model=unet, train_set=PokemonDataset(__PATH_TO_DATA__))
+    train(model=unet, train_set=PokemonDataset(_PATH_TO_DATA))

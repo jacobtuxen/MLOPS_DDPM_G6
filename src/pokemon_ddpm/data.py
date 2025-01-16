@@ -11,7 +11,7 @@ class PokemonDataset(Dataset):
     """Pokémon sprite dataset."""
 
     def __init__(self, data_path: Path) -> None:
-        self.image_paths = list(glob.glob(os.path.join(data_path, '*.jpg')))
+        self.image_paths = list(glob.glob(os.path.join(data_path, "*.jpg")))
         self.transform = transforms.Compose(
             [
                 transforms.Resize((32, 32)),
@@ -21,7 +21,6 @@ class PokemonDataset(Dataset):
         )
         self.images = []
         self._preprocess()
-    
 
     def _preprocess(self) -> None:
         for image_path in self.image_paths:
