@@ -42,7 +42,7 @@ def train(
             images = images.to(DEVICE)
             noise = torch.randn(images.shape, device=DEVICE)
 
-            timesteps = torch.randint(0, 1000, (images.shape[0],))
+            timesteps = torch.randint(0, 1000, (images.shape[0],), device=DEVICE)
             noisy_images = noise_scheduler.add_noise(images, noise, timesteps)
             noise_pred = model(noisy_images, timesteps.float(), return_dict=False)[0]
 
