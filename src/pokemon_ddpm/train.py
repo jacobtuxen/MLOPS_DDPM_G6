@@ -1,4 +1,5 @@
 from pathlib import Path
+import os
 
 import torch
 import torch.nn.functional as F  # noqa: N812
@@ -7,13 +8,21 @@ from diffusers.optimization import get_cosine_schedule_with_warmup
 from torch.utils.data import DataLoader, Dataset
 from tqdm import tqdm
 import wandb
+from dotenv import load_dotenv
 
 from pokemon_ddpm import _PATH_TO_DATA, _PATH_TO_MODELS
 from pokemon_ddpm.data import PokemonDataset
 from pokemon_ddpm.model import get_models
 
 DEVICE = torch.device("cuda" if torch.cuda.is_available() else "mps" if torch.backends.mps.is_available() else "cpu")
-wandb.login()
+
+load_dotenv()
+wandb_api_key = os.getenv("WANDB_API_KEY")
+
+if wandb_api_key is None:
+    raise ValueError("WANDB_API_KEY not found in the environment. Make sure it is set in your .env file.")
+
+wandb.login(key=wandb_api_key)
 
 def train(
     model=None,  # fix this
