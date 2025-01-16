@@ -7,49 +7,29 @@ from diffusers import DDPMScheduler
 from diffusers.optimization import get_cosine_schedule_with_warmup
 from torch.utils.data import DataLoader, Dataset
 from tqdm import tqdm
-import wandb
-from dotenv import load_dotenv
 
 from pokemon_ddpm import _PATH_TO_DATA, _PATH_TO_MODELS
 from pokemon_ddpm.data import PokemonDataset
 from pokemon_ddpm.model import get_models
+from pokemon_ddpm.utils import setup_wandb_sweep, log_training
 
-DEVICE = torch.device("cuda" if torch.cuda.is_available() else "mps" if torch.backends.mps.is_available() else "cpu")
-
-load_dotenv()
-wandb_api_key = os.getenv("WANDB_API_KEY")
-
-if wandb_api_key is None:
-    raise ValueError("WANDB_API_KEY not found in the environment. Make sure it is set in your .env file.")
-
-wandb.login(key=wandb_api_key)
+DEVICE = torch.device("cuda" if torch.cuda.is_available() else "mps" if torch.backends.mps.is_available() else "cpu") #FIX THIS
 
 def train(
-    model=None,  # fix this
-    lr: float = 1e-3,
-    lr_warmup_steps: int = 10,
-    batch_size: int = 32,
-    epochs: int = 10,
-    save_model: bool = False,
+    model=None,
+    lr=1e-4,
+    lr_warmup_steps=1000,
+    batch_size=32,
+    epochs=10,
+    save_model=False,
     train_set: Dataset = PokemonDataset(_PATH_TO_DATA),
     wandb_active: bool = False,
 ) -> None:
     """Train a model on pokemon images."""
 
-    run = wandb.init(
-        project="pokemon-ddpm",
-        config={
-            "lr": lr,
-            "lr_warmup_steps": lr_warmup_steps,
-            "batch_size": batch_size,
-            "epochs": epochs,
-            "save_model": save_model,
-        },
-    )
-
     model = model.to(DEVICE)
     model.train()
-    train_dataloader = DataLoader(train_set, batch_size=batch_size)
+    train_dataloader = DataLoader(train_set, batch_size=batch_size)        
 
     optimizer = torch.optim.AdamW(model.parameters(), lr=lr)
     lr_scheduler = get_cosine_schedule_with_warmup(
@@ -77,41 +57,18 @@ def train(
 
             epoch_loss += loss.item()
             
-            if wandb_active:
-                wandb.log({
-                    "train/train_loss": loss.item(),
-                    "train/lr": lr_scheduler.get_last_lr()[0],
-                    })
-
-        print(f"Epoch {epoch} Loss: {loss.item()}")  # TODO: Add logging (pref wandb?)
+        log_training(epoch, epoch_loss, wandb_active)
 
         if save_model:
-            torch.save(model.state_dict(), Path(_PATH_TO_MODELS) / "models" / "model.pt")
-            if wandb_active:
-                wandb.save(str(Path(_PATH_TO_MODELS) / "models" / "model.pt"))
-        
-    wandb.finish()
-
-def sweep_train(config=None):
-    """Function to be executed during a wandb sweep."""
-    with wandb.init(config=config):
-        config = wandb.config
-        ddpmp, unet = get_models(model_name=None, device=DEVICE)
-        train(
-            model=unet,
-            lr=config.lr,
-            lr_warmup_steps=config.lr_warmup_steps,
-            batch_size=config.batch_size,
-            epochs=config.epochs,
-            save_model=config.save_model,
-            train_set=PokemonDataset(_PATH_TO_DATA),
-            wandb_active=True,
-        )
-
+            torch.save(model.state_dict(), Path(_PATH_TO_MODELS) / "models" / "model.pt")      
 
 
 if __name__ == "__main__":
     ddpmp, unet = get_models(model_name=None, device=DEVICE)
-    train(model=unet, train_set=PokemonDataset(_PATH_TO_DATA))
-    sweep_id = wandb.sweep(sweep_config="configs/sweep.yaml", project="pokemon-ddpm")
-    wandb.agent(sweep_id, function=sweep_train)
+    wandb_active = True #HYDRAFY
+    if wandb_active:
+        setup_wandb_sweep(train)
+    else:
+        train(model=unet, train_set=PokemonDataset(_PATH_TO_DATA))
+    
+    
