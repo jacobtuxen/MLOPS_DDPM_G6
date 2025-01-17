@@ -5,3 +5,6 @@ workerPoolSpecs:
     replicaCount: 1
     containerSpec:
         imageUri: europe-west1-docker.pkg.dev/mlops-ddpm-g6/ddpm-container-registry/train:latest
+        env:
+        - name: WANDB_API_KEY
+          value: $WANDB_API_KEY

@@ -1,0 +1,41 @@
+steps:
+- name: "alpine"
+  id: "Replace values in the training config"
+  entrypoint: "sh"
+  args:
+    - '-c'
+    - |
+      apk add --no-cache gettext
+      envsubst < configs/cpu_config.yaml > configs/cpu_config.yaml.tmp
+      mv configs/cpu_config.yaml.tmp configs/cpu_config.yaml
+  secretEnv: ['WANDB_API_KEY']
+
+- name: 'alpine'
+  id: "Show config"
+  waitFor: ['Replace values in the training config']
+  entrypoint: "sh"
+  args:
+    - '-c'
+    - |
+      cat configs/cpu_config.yaml
+
+- name: 'gcr.io/cloud-builders/gcloud'
+  id: 'Train on vertex AI'
+  waitFor: ['Replace values in the training config']
+  args: [
+    'ai',
+    'custom-jobs',
+    'create',
+    '--region',
+    'europe-west1',
+    '--display-name',
+    'example-mlops-job',
+    '--config',
+    '${_VERTEX_TRAIN_CONFIG}',
+  ]
+substitutions:
+  _VERTEX_TRAIN_CONFIG: 'configs/cpu_config.yaml'
+availableSecrets:
+  secretManager:
+  - versionName: projects/482813488905/secrets/WANDB_API_KEY/versions/1
+    env: 'WANDB_API_KEY'
