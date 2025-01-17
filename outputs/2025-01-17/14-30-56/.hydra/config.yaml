@@ -1,7 +1,0 @@
-use_wandb: false
-model_name: null
-lr: 0.001
-lr_warmup_steps: 1000
-batch_size: 32
-epochs: 10
-save_model: true
