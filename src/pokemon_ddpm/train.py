@@ -61,7 +61,7 @@ def train(
         log_training(epoch, epoch_loss, wandb_active)
 
         if save_model:
-            torch.save(model.state_dict(), Path(_PATH_TO_MODELS) / "models" / "model.pt")
+            torch.save(model.state_dict(), Path(_PATH_TO_MODELS) / "model.pt")
 
 
 @hydra.main(config_path=str(_PATH_TO_CONFIG), config_name="train_config.yaml")
