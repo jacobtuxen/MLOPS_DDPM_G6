@@ -1,6 +1,7 @@
-from pathlib import Path
 import os
+from pathlib import Path
 
+import hydra
 import torch
 import torch.nn.functional as F  # noqa: N812
 from diffusers import DDPMScheduler
@@ -8,10 +9,11 @@ from diffusers.optimization import get_cosine_schedule_with_warmup
 from torch.utils.data import DataLoader, Dataset
 from tqdm import tqdm
 
-from pokemon_ddpm import _PATH_TO_DATA, _PATH_TO_MODELS
+from pokemon_ddpm import _PATH_TO_CONFIG, _PATH_TO_DATA, _PATH_TO_MODELS
 from pokemon_ddpm.data import PokemonDataset
 from pokemon_ddpm.model import get_models
-from pokemon_ddpm.utils import setup_wandb_sweep, log_training
+from pokemon_ddpm.utils import log_training, setup_wandb_sweep
+
 
 def train(
     model=None,
@@ -28,7 +30,7 @@ def train(
 
     model = model.to(device)
     model.train()
-    train_dataloader = DataLoader(train_set, batch_size=batch_size)        
+    train_dataloader = DataLoader(train_set, batch_size=batch_size)
 
     optimizer = torch.optim.AdamW(model.parameters(), lr=lr)
     lr_scheduler = get_cosine_schedule_with_warmup(
@@ -55,19 +57,30 @@ def train(
             optimizer.zero_grad()
 
             epoch_loss += loss.item()
-            
+
         log_training(epoch, epoch_loss, wandb_active)
 
         if save_model:
-            torch.save(model.state_dict(), Path(_PATH_TO_MODELS) / "models" / "model.pt")      
+            torch.save(model.state_dict(), Path(_PATH_TO_MODELS) / "models" / "model.pt")
+
+
+@hydra.main(config_path=str(_PATH_TO_CONFIG), config_name="train_config.yaml")
+def main(cfg):
+    ddpmp, unet = get_models(model_name=cfg.model_name)
+
+    if cfg.use_wandb:
+        setup_wandb_sweep(train)
+    else:
+        train(
+            model=unet,
+            lr=cfg.lr,
+            lr_warmup_steps=cfg.lr_warmup_steps,
+            batch_size=cfg.batch_size,
+            epochs=cfg.epochs,
+            save_model=cfg.save_model,
+            train_set=PokemonDataset(_PATH_TO_DATA),
+        )
 
 
 if __name__ == "__main__":
-    ddpmp, unet = get_models(model_name=None)
-    wandb_active = True #HYDRAFY
-    if wandb_active:
-        setup_wandb_sweep(train)
-    else:
-        train(model=unet, train_set=PokemonDataset(_PATH_TO_DATA))
-    
-    
+    main()

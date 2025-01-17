@@ -1,0 +1,6 @@
+use_wandb: false
+model_name: None
+lr: 0.001
+batch_size: 32
+epochs: 10
+save_model: true
