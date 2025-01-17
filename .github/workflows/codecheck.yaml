@@ -19,7 +19,7 @@ jobs:
           cache: 'pip'
       - name: Install dependencies
         run: |
-          pip install ruff
+          pip install --upgrade ruff
           pip list
       - name: Ruff check
         run: ruff check .
