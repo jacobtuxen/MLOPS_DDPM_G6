@@ -23,7 +23,7 @@ class DummyDataset(Dataset):
 
 def test_train():
     dummy_dataset = DummyDataset()
-    device = torch.device("cuda") if torch.cuda.is_available() else torch.device("cpu")
-    ddpmp, unet = get_models(model_name=None, device=device)
+    device = torch.device("cpu")
+    _, unet = get_models(model_name=None, device=device)
     train(model=unet, epochs=1, train_set=dummy_dataset, save_model=False)
     assert True

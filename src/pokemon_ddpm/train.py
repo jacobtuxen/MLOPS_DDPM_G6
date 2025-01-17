@@ -13,8 +13,6 @@ from pokemon_ddpm.data import PokemonDataset
 from pokemon_ddpm.model import get_models
 from pokemon_ddpm.utils import setup_wandb_sweep, log_training
 
-DEVICE = torch.device("cuda" if torch.cuda.is_available() else "mps" if torch.backends.mps.is_available() else "cpu") #FIX THIS
-
 def train(
     model=None,
     lr=1e-4,
@@ -24,10 +22,11 @@ def train(
     save_model=False,
     train_set: Dataset = PokemonDataset(_PATH_TO_DATA),
     wandb_active: bool = False,
+    device: torch.device = torch.device("cuda" if torch.cuda.is_available() else "cpu"),
 ) -> None:
     """Train a model on pokemon images."""
 
-    model = model.to(DEVICE)
+    model = model.to(device)
     model.train()
     train_dataloader = DataLoader(train_set, batch_size=batch_size)        
 
@@ -42,10 +41,10 @@ def train(
         epoch_loss = 0
 
         for images in tqdm(train_dataloader, desc="Processing batches"):
-            images = images.to(DEVICE)
-            noise = torch.randn(images.shape, device=DEVICE)
+            images = images.to(device)
+            noise = torch.randn(images.shape, device=device)
 
-            timesteps = torch.randint(0, 1000, (images.shape[0],), device=DEVICE)
+            timesteps = torch.randint(0, 1000, (images.shape[0],), device=device)
             noisy_images = noise_scheduler.add_noise(images, noise, timesteps)
             noise_pred = model(noisy_images, timesteps.float(), return_dict=False)[0]
 
@@ -64,7 +63,7 @@ def train(
 
 
 if __name__ == "__main__":
-    ddpmp, unet = get_models(model_name=None, device=DEVICE)
+    ddpmp, unet = get_models(model_name=None)
     wandb_active = True #HYDRAFY
     if wandb_active:
         setup_wandb_sweep(train)
