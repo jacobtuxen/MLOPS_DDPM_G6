@@ -1,4 +1,5 @@
 from pathlib import Path
+import os
 
 import torch
 import torch.nn.functional as F  # noqa: N812
@@ -10,24 +11,25 @@ from tqdm import tqdm
 from pokemon_ddpm import _PATH_TO_DATA, _PATH_TO_MODELS
 from pokemon_ddpm.data import PokemonDataset
 from pokemon_ddpm.model import get_models
+from pokemon_ddpm.utils import setup_wandb_sweep, log_training
 
-DEVICE = torch.device("cuda" if torch.cuda.is_available() else "mps" if torch.backends.mps.is_available() else "cpu")
-
+DEVICE = torch.device("cuda" if torch.cuda.is_available() else "mps" if torch.backends.mps.is_available() else "cpu") #FIX THIS
 
 def train(
-    model=None,  # fix this
-    lr: float = 1e-3,
-    lr_warmup_steps: int = 10,
-    batch_size: int = 32,
-    epochs: int = 10,
-    save_model: bool = False,
+    model=None,
+    lr=1e-4,
+    lr_warmup_steps=1000,
+    batch_size=32,
+    epochs=10,
+    save_model=False,
     train_set: Dataset = PokemonDataset(_PATH_TO_DATA),
+    wandb_active: bool = False,
 ) -> None:
     """Train a model on pokemon images."""
 
     model = model.to(DEVICE)
     model.train()
-    train_dataloader = DataLoader(train_set, batch_size=batch_size)
+    train_dataloader = DataLoader(train_set, batch_size=batch_size)        
 
     optimizer = torch.optim.AdamW(model.parameters(), lr=lr)
     lr_scheduler = get_cosine_schedule_with_warmup(
@@ -37,6 +39,7 @@ def train(
 
     for epoch in range(epochs):
         model.train()
+        epoch_loss = 0
 
         for images in tqdm(train_dataloader, desc="Processing batches"):
             images = images.to(DEVICE)
@@ -52,12 +55,20 @@ def train(
             lr_scheduler.step()
             optimizer.zero_grad()
 
-        print(f"Epoch {epoch} Loss: {loss.item()}")  # TODO: Add logging (pref wandb?)
+            epoch_loss += loss.item()
+            
+        log_training(epoch, epoch_loss, wandb_active)
 
         if save_model:
-            torch.save(model.state_dict(), Path(_PATH_TO_MODELS) / "models" / "model.pt")
+            torch.save(model.state_dict(), Path(_PATH_TO_MODELS) / "models" / "model.pt")      
 
 
 if __name__ == "__main__":
     ddpmp, unet = get_models(model_name=None, device=DEVICE)
-    train(model=unet, train_set=PokemonDataset(_PATH_TO_DATA))
+    wandb_active = True #HYDRAFY
+    if wandb_active:
+        setup_wandb_sweep(train)
+    else:
+        train(model=unet, train_set=PokemonDataset(_PATH_TO_DATA))
+    
+    

@@ -181,4 +181,4 @@ cython_debug/
 data/
 reports/figures/
 models/
-/data
+wandb/
