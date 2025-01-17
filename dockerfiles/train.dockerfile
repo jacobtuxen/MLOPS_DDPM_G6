@@ -13,7 +13,7 @@ COPY models models/
 COPY requirements.txt requirements.txt
 COPY pyproject.toml pyproject.toml
 
-RUN --mount=type=cache,target=/root/.cache/pip pip install -r requirements.txt
+RUN pip install -r requirements.txt --no-cache-dir
 RUN pip install . --no-deps --no-cache-dir --verbose
 
 ENV PROJECT_ROOT=/app

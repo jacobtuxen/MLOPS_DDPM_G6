@@ -1,0 +1,11 @@
+# ignore
+task.py
+.dvcignore
+.dvc
+data.dvc
+.github
+.gitignore
+.git
+.pre-commit-config.yaml
+tests/
+reports/
