@@ -9,6 +9,8 @@
 - [x] Task 7: Add unit tests, and GA
 - [ ] Task 8: dvc + Move data to GC
 - [x] Task 9: add hydra
+- [ ] Task 10: Export model and load with ONNX
+- [ ] Task 11: Use bentoML for API integration (use ONNX model)
 
 
 
