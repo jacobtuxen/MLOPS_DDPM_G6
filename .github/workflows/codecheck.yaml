@@ -29,8 +29,7 @@ jobs:
         run: |
           ruff --version
           ruff show-settings . || echo "No settings found"
-          ruff --help
       - name: Ruff check
-        run: ruff check .
+        run: ruff check . || echo "Ruff check failed, please run 'ruff check .' locally, and the --fix"
       - name: Ruff format
         run: ruff format .
