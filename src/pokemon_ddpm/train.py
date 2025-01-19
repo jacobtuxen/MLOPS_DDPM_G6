@@ -1,4 +1,5 @@
 import os
+import time
 from pathlib import Path
 
 import hydra
@@ -8,9 +9,8 @@ from diffusers import DDPMScheduler
 from diffusers.optimization import get_cosine_schedule_with_warmup
 from torch.utils.data import DataLoader, Dataset
 from tqdm import tqdm
-import time
-import wandb
 
+import wandb
 from pokemon_ddpm import _PATH_TO_CONFIG, _PATH_TO_DATA, _PATH_TO_MODELS, _PATH_TO_SWEEP
 from pokemon_ddpm.data import PokemonDataset
 from pokemon_ddpm.model import get_models
