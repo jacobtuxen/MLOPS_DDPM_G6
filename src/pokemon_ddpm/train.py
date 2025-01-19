@@ -8,8 +8,10 @@ from diffusers import DDPMScheduler
 from diffusers.optimization import get_cosine_schedule_with_warmup
 from torch.utils.data import DataLoader, Dataset
 from tqdm import tqdm
+import time
+import wandb
 
-from pokemon_ddpm import _PATH_TO_CONFIG, _PATH_TO_DATA, _PATH_TO_MODELS
+from pokemon_ddpm import _PATH_TO_CONFIG, _PATH_TO_DATA, _PATH_TO_MODELS, _PATH_TO_SWEEP
 from pokemon_ddpm.data import PokemonDataset
 from pokemon_ddpm.model import get_models
 from pokemon_ddpm.utils import log_training, setup_wandb_sweep
@@ -39,6 +41,7 @@ def train(
     noise_scheduler = DDPMScheduler(num_train_timesteps=1000)
 
     for epoch in range(epochs):
+        start_time = time.time()
         model.train()
         epoch_loss = 0
 
@@ -58,7 +61,17 @@ def train(
 
             epoch_loss += loss.item()
 
-        log_training(epoch, epoch_loss, wandb_active)
+        if wandb_active:
+            epoch_duration = time.time() - start_time
+            log_training(
+                epoch=epoch,
+                epoch_loss=epoch_loss,
+                wandb_active=True,
+                model=model,
+                lr_scheduler=lr_scheduler,
+                train_dataloader=train_dataloader,
+            )
+            wandb.log({"epoch_duration": epoch_duration})
 
         if save_model:
             torch.save(model.state_dict(), Path(_PATH_TO_MODELS) / "model.pt")
@@ -69,7 +82,11 @@ def main(cfg):
     ddpmp, unet = get_models(model_name=cfg.model_name)
 
     if cfg.use_wandb:
-        setup_wandb_sweep(train)
+        setup_wandb_sweep(
+            train_fn=train, 
+            sweep_file_path=_PATH_TO_SWEEP,
+            model=unet,
+            )
     else:
         train(
             model=unet,

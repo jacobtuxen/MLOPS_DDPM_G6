@@ -118,7 +118,7 @@ will check the repositories and the code to verify your answers.
 >
 > Answer:
 
---- question 1 fill here ---
+6
 
 ### Question 2
 > **Enter the study number for each member in the group**
@@ -129,7 +129,7 @@ will check the repositories and the code to verify your answers.
 >
 > Answer:
 
---- question 2 fill here ---
+s216143, s, s
 
 ### Question 3
 > **A requirement to the project is that you include a third-party package not covered in the course. What framework**
@@ -163,7 +163,7 @@ will check the repositories and the code to verify your answers.
 >
 > Answer:
 
---- question 4 fill here ---
+To manage dependencies in our project, we used the 'requirements.txt' file to list all the necessary packages. Then, each member of the group can get the exact copy of the env. by installing w.r.t. the requirements. If one member installs a new package, they can update the 'requirements.txt' file by running pipreqs.
 
 ### Question 5
 
@@ -179,7 +179,7 @@ will check the repositories and the code to verify your answers.
 >
 > Answer:
 
---- question 5 fill here ---
+From the cookiecutter template we have primarly used the src folder, data, model, and tests folders. We have removed the ...
 
 ### Question 6
 
@@ -194,7 +194,7 @@ will check the repositories and the code to verify your answers.
 >
 > Answer:
 
---- question 6 fill here ---
+For styling we have used Ruff to setup the linting and formatting. We use typing to identify input parameters for each functions, such that when recalled it is easier for the reader to know, what each input parameters takes as values. Also, for each function we write a docstring to explain what the function does, what the input parameters are and what the output is. This is important in larger projects because it makes the code more readable and understandable for other developers.
 
 ## Version control
 
@@ -213,7 +213,7 @@ will check the repositories and the code to verify your answers.
 >
 > Answer:
 
---- question 7 fill here ---
+In total we have implemented X tests. Primarily we are testing if the data is properly ingested and preprocessed, and if the training loop is working as intended.
 
 ### Question 8
 
@@ -243,7 +243,7 @@ will check the repositories and the code to verify your answers.
 >
 > Answer:
 
---- question 9 fill here ---
+For our project, we did not use branches and PRs, as we considered the project small enough to manage without them, and we are only three members. This allowed us to work on the same branch efficiently. However, in larger projects, branches and PRs are crucial for maintaining an overview and preventing merge conflicts. By having one person manage the main branch, other members can work on their own branches and submit PRs when ready. This ensures the main branch remains clean and up-to-date.
 
 ### Question 10
 
@@ -275,7 +275,7 @@ will check the repositories and the code to verify your answers.
 >
 > Answer:
 
---- question 11 fill here ---
+We use unit testing to test the data and training pipeline. This ensures that whenever someone wants to push some new code, we make sure everything works. We use cache for python version control and linting when creating our docker images.
 
 ## Running code and tracking experiments
 
@@ -294,7 +294,7 @@ will check the repositories and the code to verify your answers.
 >
 > Answer:
 
---- question 12 fill here ---
+For logging hyperparameters, we used Hydra to load the configurations and manage our hyperparameters locally. We then had a sweep.yaml file for wandb to run hyperparameter sweeps. For example, to run an experiment we would run `python train.py lr=1e-3 batch_size=64`.
 
 ### Question 13
 
