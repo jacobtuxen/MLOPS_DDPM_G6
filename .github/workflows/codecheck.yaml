@@ -22,6 +22,6 @@ jobs:
           pip install --upgrade ruff
           pip list
       - name: Ruff check
-        run: ruff check . --fix
+        run: ruff check .
       - name: Ruff format
         run: ruff format .
