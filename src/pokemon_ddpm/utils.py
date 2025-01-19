@@ -6,7 +6,6 @@ from dotenv import load_dotenv
 import wandb
 from pokemon_ddpm import _PATH_TO_DATA
 from pokemon_ddpm.data import PokemonDataset
-from pokemon_ddpm.model import get_models
 
 
 def setup_wandb_sweep(train_fn: callable, sweep_file_path: str, model: any) -> None:
