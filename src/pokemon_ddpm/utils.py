@@ -42,7 +42,7 @@ def setup_wandb_sweep(train_fn: callable, sweep_file_path: str, model: any) -> N
 
         # Call the training function with the sweep configuration
         train_fn(
-            model=model,
+            ddpm=model,
             lr=config["lr"],
             lr_warmup_steps=config["lr_warmup_steps"],
             batch_size=config["batch_size"],

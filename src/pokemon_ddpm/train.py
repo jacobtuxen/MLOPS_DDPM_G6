@@ -10,7 +10,7 @@ import wandb
 from pokemon_ddpm import _PATH_TO_CONFIG, _PATH_TO_DATA, _PATH_TO_MODELS, _PATH_TO_SWEEP
 from pokemon_ddpm.data import PokemonDataset
 from pokemon_ddpm.model import get_models
-from pokemon_ddpm.utils import log_training, save_dict, setup_wandb_sweep
+from pokemon_ddpm.utils import log_training, setup_wandb_sweep
 
 
 def train(
@@ -77,7 +77,7 @@ def main(cfg):
         setup_wandb_sweep(
             train_fn=train,
             sweep_file_path=_PATH_TO_SWEEP,
-            models=[ddpm, unet],
+            model=ddpm,
         )
     else:
         train(

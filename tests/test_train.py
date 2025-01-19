@@ -24,6 +24,6 @@ class DummyDataset(Dataset):
 def test_train():
     dummy_dataset = DummyDataset()
     device = torch.device("cpu")
-    _, unet = get_models(model_name=None, device=device)
-    train(model=unet, epochs=1, train_set=dummy_dataset, save_model=False)
+    ddpm, unet = get_models(model_name=None, device=device)
+    train(ddpm=ddpm, epochs=1, train_set=dummy_dataset, save_model=False)
     assert True
