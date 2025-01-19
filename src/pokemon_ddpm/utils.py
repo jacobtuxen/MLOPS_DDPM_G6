@@ -1,5 +1,6 @@
 import os
 
+import torch
 from dotenv import load_dotenv
 
 import wandb
@@ -19,6 +20,7 @@ def setup_wandb_sweep(train_fn: callable, sweep_file_path: str, model: any) -> N
     """
     # Load the sweep configuration from the YAML file
     import yaml
+
     with open(sweep_file_path, "r") as file:
         sweep_config = yaml.safe_load(file)
 
@@ -56,18 +58,19 @@ def setup_wandb_sweep(train_fn: callable, sweep_file_path: str, model: any) -> N
     wandb.agent(sweep_id, function=sweep_train_fn)
 
 
-def log_training(epoch: int, epoch_loss: float, wandb_active: bool = True, model=None, lr_scheduler=None, train_dataloader=None) -> None:
+def log_training(
+    epoch_loss: float, wandb_active: bool = True, model=None, lr_scheduler=None, train_dataloader=None
+) -> None:
     """Enhanced logging for training metrics.
 
     Args:
-        epoch (int): The current epoch number.
         epoch_loss (float): The loss value for the current epoch.
         wandb_active (bool): Whether wandb is active.
         model (nn.Module): The model being trained.
         lr_scheduler (torch.optim.lr_scheduler): The learning rate scheduler.
         train_dataloader (torch.utils.data.DataLoader): The training dataloader.
     """
-    
+
     if wandb_active:
         logs = {
             "train/loss": epoch_loss,
@@ -75,12 +78,11 @@ def log_training(epoch: int, epoch_loss: float, wandb_active: bool = True, model
             "train/lr": lr_scheduler.get_last_lr()[0] if lr_scheduler else None,
         }
 
-        
         if model is not None:
             total_norm = 0
             for p in model.parameters():
                 if p.grad is not None:
                     total_norm += p.grad.data.norm(2).item() ** 2
-            logs["train/gradient_norm"] = total_norm ** 0.5
+            logs["train/gradient_norm"] = total_norm**0.5
 
         wandb.log(logs)

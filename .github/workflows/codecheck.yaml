@@ -21,15 +21,7 @@ jobs:
         run: |
           pip install --upgrade ruff
           pip list
-      - name: Verify Ruff Configuration
-        run: |
-          echo "Using the following pyproject.toml configuration:"
-          cat pyproject.toml || echo "No pyproject.toml found"
-      - name: Debug Ruff
-        run: |
-          ruff --version
-          ruff show-settings . || echo "No settings found"
       - name: Ruff check
-        run: ruff check . || echo "Ruff check failed, please run 'ruff check .' locally, and the --fix"
+        run: ruff check .
       - name: Ruff format
         run: ruff format .

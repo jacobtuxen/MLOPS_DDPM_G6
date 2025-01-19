@@ -1,4 +1,4 @@
-use_wandb: true
+use_wandb: false
 model_name: null
 lr: 1e-3
 lr_warmup_steps: 1000

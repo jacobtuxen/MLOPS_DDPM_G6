@@ -10,3 +10,4 @@ numpy<2
 torchvision==0.17.2
 tqdm==4.67.1
 wandb==0.19.3
+accelerate==1.3.0

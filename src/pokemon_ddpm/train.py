@@ -1,7 +1,3 @@
-import os
-import time
-from pathlib import Path
-
 import hydra
 import torch
 import torch.nn.functional as F  # noqa: N812
@@ -14,11 +10,11 @@ import wandb
 from pokemon_ddpm import _PATH_TO_CONFIG, _PATH_TO_DATA, _PATH_TO_MODELS, _PATH_TO_SWEEP
 from pokemon_ddpm.data import PokemonDataset
 from pokemon_ddpm.model import get_models
-from pokemon_ddpm.utils import log_training, setup_wandb_sweep
+from pokemon_ddpm.utils import log_training, save_dict, setup_wandb_sweep
 
 
 def train(
-    model=None,
+    ddpm,
     lr=1e-4,
     lr_warmup_steps=1000,
     batch_size=32,
@@ -30,7 +26,7 @@ def train(
 ) -> None:
     """Train a model on pokemon images."""
 
-    model = model.to(device)
+    model = ddpm.unet.to(device)
     model.train()
     train_dataloader = DataLoader(train_set, batch_size=batch_size)
 
@@ -41,8 +37,6 @@ def train(
     noise_scheduler = DDPMScheduler(num_train_timesteps=1000)
 
     for epoch in range(epochs):
-        start_time = time.time()
-        model.train()
         epoch_loss = 0
 
         for images in tqdm(train_dataloader, desc="Processing batches"):
@@ -62,7 +56,6 @@ def train(
             epoch_loss += loss.item()
 
         if wandb_active:
-            epoch_duration = time.time() - start_time
             log_training(
                 epoch=epoch,
                 epoch_loss=epoch_loss,
@@ -71,25 +64,24 @@ def train(
                 lr_scheduler=lr_scheduler,
                 train_dataloader=train_dataloader,
             )
-            wandb.log({"epoch_duration": epoch_duration})
 
         if save_model:
-            torch.save(model.state_dict(), Path(_PATH_TO_MODELS) / "model.pt")
+            ddpm.save_pretrained(save_directory=_PATH_TO_MODELS, safe_serialization=False)
 
 
 @hydra.main(config_path=str(_PATH_TO_CONFIG), config_name="train_config.yaml")
 def main(cfg):
-    ddpmp, unet = get_models(model_name=cfg.model_name)
+    ddpm, unet = get_models(model_name=cfg.model_name)
 
     if cfg.use_wandb:
         setup_wandb_sweep(
-            train_fn=train, 
+            train_fn=train,
             sweep_file_path=_PATH_TO_SWEEP,
-            model=unet,
-            )
+            models=[ddpm, unet],
+        )
     else:
         train(
-            model=unet,
+            ddpm=ddpm,
             lr=cfg.lr,
             lr_warmup_steps=cfg.lr_warmup_steps,
             batch_size=cfg.batch_size,
