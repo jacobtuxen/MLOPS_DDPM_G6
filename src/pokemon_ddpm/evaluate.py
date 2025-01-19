@@ -1,4 +1,3 @@
-import matplotlib.pyplot as plt
 
 from pokemon_ddpm import _PATH_TO_MODELS
 from pokemon_ddpm.model import get_models

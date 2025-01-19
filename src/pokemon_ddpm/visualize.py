@@ -6,7 +6,6 @@ import torch
 
 def visualize_datapoints(path: Path) -> None:
     """A simple function that visualizes random datapoints of the dataset."""
-
     # Load the tensor from the file
     data = torch.load(path)
 

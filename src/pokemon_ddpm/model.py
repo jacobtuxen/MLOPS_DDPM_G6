@@ -12,8 +12,8 @@ def get_models(
     num_train_steps: int = 1000,
 ) -> Tuple[DDPMPipeline, UNet2DModel]:
     """Return the model and the pipeline. If a model name is provided,
-    load the model from disk. Otherwise, create a new model."""
-
+    load the model from disk. Otherwise, create a new model.
+    """
     if model_name is None:
         unet = UNet2DModel(sample_size=32, in_channels=3, out_channels=3).to(device)
         ddpm = DDPMPipeline(unet=unet, scheduler=DDPMScheduler(num_train_timesteps=num_train_steps))

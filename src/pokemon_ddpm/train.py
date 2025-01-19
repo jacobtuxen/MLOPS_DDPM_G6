@@ -24,7 +24,6 @@ def train(
     device: torch.device = torch.device("cuda" if torch.cuda.is_available() else "cpu"),
 ) -> None:
     """Train a model on pokemon images."""
-
     model = ddpm.unet.to(device)
     model.train()
     train_dataloader = DataLoader(train_set, batch_size=batch_size)

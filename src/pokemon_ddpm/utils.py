@@ -8,13 +8,13 @@ from pokemon_ddpm.data import PokemonDataset
 
 
 def setup_wandb_sweep(train_fn: callable, sweep_file_path: str, model: any) -> None:
-    """
-    Setup wandb for logging and configure sweeps for hyperparameter tuning.
+    """Setup wandb for logging and configure sweeps for hyperparameter tuning.
 
     Args:
         train_fn (callable): The training function that accepts a config dictionary.
         sweep_file_path (str): Path to the sweep.yaml file.
         model (any): The model to be used for training.
+
     """
     # Load the sweep configuration from the YAML file
     import yaml
@@ -67,8 +67,8 @@ def log_training(
         model (nn.Module): The model being trained.
         lr_scheduler (torch.optim.lr_scheduler): The learning rate scheduler.
         train_dataloader (torch.utils.data.DataLoader): The training dataloader.
-    """
 
+    """
     if wandb_active:
         logs = {
             "train/loss": epoch_loss,

@@ -29,7 +29,7 @@ dev = {file = ['requirements_dev.txt']}
 line-length = 120
 
 [tool.ruff.lint]
-select = ["I", "N"]
+select = ["I", "N", "F", "E"]
 
 [tool.coverage.run]
 omit = ["tests/*"]
