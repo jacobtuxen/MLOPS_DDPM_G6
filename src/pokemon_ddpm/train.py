@@ -20,6 +20,7 @@ def train(
     epochs=10,
     save_model=False,
     train_set: Dataset = PokemonDataset(_PATH_TO_DATA),
+    num_train_steps: int = 1000,
     wandb_active: bool = False,
     device: torch.device = torch.device("cuda" if torch.cuda.is_available() else "cpu"),
 ) -> None:
@@ -32,7 +33,7 @@ def train(
     lr_scheduler = get_cosine_schedule_with_warmup(
         optimizer=optimizer, num_warmup_steps=lr_warmup_steps, num_training_steps=(len(train_dataloader) * epochs)
     )
-    noise_scheduler = DDPMScheduler(num_train_timesteps=1000)
+    noise_scheduler = DDPMScheduler(num_train_timesteps=num_train_steps)
 
     for epoch in range(epochs):
         epoch_loss = 0
@@ -41,7 +42,7 @@ def train(
             images = images.to(device)
             noise = torch.randn(images.shape, device=device)
 
-            timesteps = torch.randint(0, 1000, (images.shape[0],), device=device)
+            timesteps = torch.randint(0, num_train_steps, (images.shape[0],), device=device)
             noisy_images = noise_scheduler.add_noise(images, noise, timesteps)
             noise_pred = model(noisy_images, timesteps.float(), return_dict=False)[0]
 
@@ -69,7 +70,7 @@ def train(
 
 @hydra.main(config_path=str(_PATH_TO_CONFIG), config_name="train_config.yaml")
 def main(cfg):
-    ddpm, unet = get_models(model_name=cfg.model_name)
+    ddpm, unet = get_models(model_name=cfg.model_name, num_train_steps=cfg.num_train_steps)
 
     if cfg.use_wandb:
         setup_wandb_sweep(
@@ -85,6 +86,7 @@ def main(cfg):
             batch_size=cfg.batch_size,
             epochs=cfg.epochs,
             save_model=cfg.save_model,
+            num_train_steps=cfg.num_train_steps,
             train_set=PokemonDataset(_PATH_TO_DATA),
         )
 
