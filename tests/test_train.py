@@ -1,7 +1,7 @@
 import torch
 from torch.utils.data import Dataset
 
-from pokemon_ddpm.model import get_models
+from pokemon_ddpm.model import PokemonDDPM
 from pokemon_ddpm.train import train
 
 
@@ -21,7 +21,6 @@ class DummyDataset(Dataset):
 
 def test_train():
     dummy_dataset = DummyDataset()
-    device = torch.device("cpu")
-    ddpm, unet = get_models(model_name=None, device=device)
-    train(ddpm=ddpm, epochs=1, train_set=dummy_dataset, save_model=False)
+    model = PokemonDDPM()
+    train(model=model, train_set=dummy_dataset, epochs=1)
     assert True

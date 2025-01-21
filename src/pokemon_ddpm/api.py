@@ -5,18 +5,18 @@ from fastapi import FastAPI
 from fastapi.responses import StreamingResponse
 
 from pokemon_ddpm import _PATH_TO_MODELS
-from pokemon_ddpm.model import get_models
+from pokemon_ddpm.model import PokemonDDPM
 
 
 def lifespan(app: FastAPI) -> Generator[None, None, None]:
     """Load model and classes, and create database file."""
-    global ddpm
-    ddpm, _ = get_models(model_name=None)
-    ddpm.from_pretrained(pretrained_model_name_or_path=_PATH_TO_MODELS, use_safetensors=False)
+    global model
+    model = PokemonDDPM()
+    model.ddpm.from_pretrained(pretrained_model_name_or_path=_PATH_TO_MODELS, use_safetensors=False)
 
     yield
 
-    del ddpm
+    del model
 
 
 app = FastAPI(lifespan=lifespan)
@@ -25,8 +25,7 @@ app = FastAPI(lifespan=lifespan)
 @app.get("/sample")
 def sample():
     print("Sampling from the model...")
-    num_samples = 1
-    samples = ddpm(batch_size=num_samples)
+    samples = model.sample()
 
     pil_image = samples[0][0]
 

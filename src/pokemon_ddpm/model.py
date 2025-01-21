@@ -1,24 +1,37 @@
-from typing import Tuple, Union
-
 import torch
 from diffusers import DDPMPipeline, DDPMScheduler, UNet2DModel
+from pytorch_lightning import LightningModule
 
-from pokemon_ddpm import _PATH_TO_MODELS
 
+class PokemonDDPM(LightningModule):
+    def __init__(self):
+        super().__init__()
+        self.unet = UNet2DModel(sample_size=32, in_channels=3, out_channels=3)
+        self.ddpm = DDPMPipeline(unet=self.unet, scheduler=DDPMScheduler(num_train_timesteps=1000))
+        self.noise_scheduler = DDPMScheduler(num_train_timesteps=1000)
+        self.criterium = torch.nn.MSELoss()
 
-def get_models(
-    model_name: Union[str, None],
-    device: torch.device = torch.device("cuda" if torch.cuda.is_available() else "cpu"),
-    num_train_steps: int = 1000,
-) -> Tuple[DDPMPipeline, UNet2DModel]:
-    """Return the model and the pipeline. If a model name is provided,
-    load the model from disk. Otherwise, create a new model.
-    """
-    if model_name is None:
-        unet = UNet2DModel(sample_size=32, in_channels=3, out_channels=3).to(device)
-        ddpm = DDPMPipeline(unet=unet, scheduler=DDPMScheduler(num_train_timesteps=num_train_steps))
-    else:
-        ddpm = torch.load(f"{_PATH_TO_MODELS}/{model_name}", map_location=device)
-        unet = ddpm.unet
+    def forward(self, x, t):
+        return self.unet(x, t, return_dict=False)[0]
 
-    return ddpm, unet
+    def parameters(self):
+        return self.unet.parameters()
+
+    def sample(self):
+        return self.ddpm(batch_size=1)
+
+    def training_step(self, batch, batch_idx):
+        images = batch
+        noise = torch.randn(images.shape)
+        timesteps = torch.randint(0, 1000, (images.shape[0],))
+        noisy_images = self.noise_scheduler.add_noise(images, noise, timesteps)
+        noise_pred = self(noisy_images, timesteps.float())
+        loss = self.criterium(noise_pred, noise)
+        self.log("train_loss", loss)
+        return loss
+
+    def configure_optimizers(self):
+        return torch.optim.AdamW(self.parameters(), lr=1e-4)
+
+    def save_model(self, path) -> None:
+        self.ddpm.save_pretrained(save_directory=path, safe_serialization=False)
