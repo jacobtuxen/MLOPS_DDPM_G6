@@ -26,8 +26,7 @@ def test_get_models():
     generated_images = output.images
 
     # Ensure the output images is a list and contains at least one image
-    assert isinstance(generated_images, list), f"Expected 'images' to be a list, but got 
-      {type(generated_images)}"
+    assert isinstance(generated_images, list), f"Expected 'images' to be a list, but got {type(generated_images)}"
     assert len(generated_images) == 1, f"Expected 1 image, but got {len(generated_images)}"
 
     # Get the first image and assert it's a PIL.Image object
