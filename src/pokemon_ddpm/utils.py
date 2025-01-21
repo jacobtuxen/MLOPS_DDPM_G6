@@ -53,4 +53,3 @@ def setup_wandb_sweep(train_fn: callable, sweep_file_path: str, model: any, trai
 
     # Start the sweep
     wandb.agent(sweep_id, function=sweep_train_fn)
-

@@ -37,5 +37,4 @@ def test_get_models():
 
     # Optionally, check the size of the image (if necessary)
     expected_size = (32, 32)  # 32x32 image size
-    assert generated_image.size == expected_size, (
-      f"Expected image size {expected_size}, but got {generated_image.size}")
+    assert generated_image.size == expected_size, f"Expected image size {expected_size}, but got {generated_image.size}"
