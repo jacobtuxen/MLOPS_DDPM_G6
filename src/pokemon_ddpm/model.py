@@ -27,7 +27,7 @@ class PokemonDDPM(LightningModule):
         noisy_images = self.noise_scheduler.add_noise(images, noise, timesteps)
         noise_pred = self(noisy_images, timesteps.float())
         loss = self.criterium(noise_pred, noise)
-        self.log("train_loss", loss)
+        self.log("train_loss", loss.item())
         return loss
 
     def configure_optimizers(self):
