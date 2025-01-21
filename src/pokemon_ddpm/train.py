@@ -16,9 +16,10 @@ def train(
     epochs: int = 10,
     batch_size: int = 32,
     wandb_active=False,
+    device="cpu",
 ) -> None:
     train_dataloader = DataLoader(train_set, batch_size=batch_size)
-    trainer = Trainer(max_epochs=epochs)
+    trainer = Trainer(accelerator=device, max_epochs=epochs)
     trainer.fit(model, train_dataloader)
     model.save_model(_PATH_TO_MODELS)
 
@@ -39,6 +40,7 @@ def main(cfg):
             batch_size=cfg.batch_size,
             epochs=cfg.epochs,
             train_set=PokemonDataset(_PATH_TO_DATA),
+            device=cfg.device,
         )
 
 

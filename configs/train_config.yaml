@@ -6,3 +6,4 @@ batch_size: 32
 epochs: 10
 save_model: true
 num_train_steps: 1000
+device: cpu
