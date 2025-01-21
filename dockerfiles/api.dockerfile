@@ -5,13 +5,16 @@ RUN apt update && \
     apt install --no-install-recommends -y build-essential gcc && \
     apt clean && rm -rf /var/lib/apt/lists/*
 
-COPY src src/
+COPY src src
+COPY models models
 COPY requirements.txt requirements.txt
 COPY README.md README.md
 COPY pyproject.toml pyproject.toml
 
 RUN pip install -r requirements.txt --no-cache-dir --verbose
+RUN pip install uvicorn
+RUN pip install fastapi
 RUN pip install . --no-deps --no-cache-dir --verbose
 
 EXPOSE $PORT
-CMD exec uvicorn src/pokemon_ddpm/api:app --port $PORT --host 0.0.0.0 --workers 1
+CMD exec uvicorn src.pokemon_ddpm.api:app --port $PORT --host 0.0.0.0 --workers 1

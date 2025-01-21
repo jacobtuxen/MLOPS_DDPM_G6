@@ -22,8 +22,8 @@ class PokemonDDPM(LightningModule):
 
     def training_step(self, batch, batch_idx):
         images = batch
-        noise = torch.randn(images.shape)
-        timesteps = torch.randint(0, 1000, (images.shape[0],))
+        noise = torch.randn_like(images)
+        timesteps = torch.randint(0, 1000, (images.shape[0],), device=noise.device)
         noisy_images = self.noise_scheduler.add_noise(images, noise, timesteps)
         noise_pred = self(noisy_images, timesteps.float())
         loss = self.criterium(noise_pred, noise)
