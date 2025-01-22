@@ -4,6 +4,7 @@ from dotenv import load_dotenv
 
 import wandb
 
+
 def setup_wandb_sweep(train_fn: callable, sweep_file_path: str, model: any, train_set: any, epochs: int, device: str):
     """Setup wandb for logging and configure sweeps for hyperparameter tuning.
 
