@@ -20,7 +20,7 @@ def train(
     device="cpu",
 ) -> None:
     train_dataloader = DataLoader(train_set, batch_size=batch_size)
-    
+
     logger = WandbLogger(project="MLOPS_DDPM_G6") if wandb_active else None
 
     trainer = Trainer(accelerator=device, max_epochs=epochs, logger=logger, log_every_n_steps=25)

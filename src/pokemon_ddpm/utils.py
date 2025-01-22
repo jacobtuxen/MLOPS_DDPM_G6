@@ -2,8 +2,6 @@ import os
 
 from dotenv import load_dotenv
 
-import wandb
-
 
 def setup_wandb_sweep(train_fn: callable, sweep_file_path: str, model: any, train_set: any, epochs: int, device: str):
     """Setup wandb for logging and configure sweeps for hyperparameter tuning.
@@ -19,6 +17,8 @@ def setup_wandb_sweep(train_fn: callable, sweep_file_path: str, model: any, trai
     """
     # Load the sweep configuration from the YAML file
     import yaml
+
+    import wandb
 
     with open(sweep_file_path, "r") as file:
         sweep_config = yaml.safe_load(file)
