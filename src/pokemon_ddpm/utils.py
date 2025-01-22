@@ -1,6 +1,13 @@
 import os
 
+import torch
+import yaml
 from dotenv import load_dotenv
+from pytorch_lightning.callbacks import Callback
+from torch.nn.utils import prune
+
+import wandb
+from pokemon_ddpm import _PATH_TO_OUTPUT
 
 
 def setup_wandb_sweep(train_fn: callable, sweep_file_path: str, model: any, train_set: any, epochs: int, device: str):
@@ -15,10 +22,6 @@ def setup_wandb_sweep(train_fn: callable, sweep_file_path: str, model: any, trai
         device (str): The device to train the model on.
 
     """
-    # Load the sweep configuration from the YAML file
-    import yaml
-
-    import wandb
 
     with open(sweep_file_path, "r") as file:
         sweep_config = yaml.safe_load(file)
@@ -31,15 +34,12 @@ def setup_wandb_sweep(train_fn: callable, sweep_file_path: str, model: any, trai
 
     wandb.login(key=wandb_api_key)
 
-    # Initialize the sweep
     sweep_id = wandb.sweep(sweep=sweep_config, project=sweep_config.get("project", "pokemon-ddpm"))
 
-    # Function to execute training with WandB sweep
     def sweep_train_fn():
         wandb.init()
         config = wandb.config
 
-        # Call the training function with the sweep configuration
         train_fn(
             model=model,
             batch_size=config["batch_size"],
@@ -51,5 +51,34 @@ def setup_wandb_sweep(train_fn: callable, sweep_file_path: str, model: any, trai
 
         wandb.finish()
 
-    # Start the sweep
     wandb.agent(sweep_id, function=sweep_train_fn)
+
+
+class SampleCallback(Callback):
+    def __init__(self):
+        if not os.path.exists(_PATH_TO_OUTPUT):
+            os.makedirs(_PATH_TO_OUTPUT)
+
+    def on_train_epoch_end(self, trainer, pl_module):
+        sample = pl_module.sample()
+        sample[0][0].save(_PATH_TO_OUTPUT / "sample.png")
+
+
+class PruneCallback(Callback):
+    def __init__(self, amount: float = 0.5):
+        self.amount = amount
+
+    def on_train_epoch_end(self, trainer, pl_module):
+        for name, module in pl_module.unet.named_modules():
+            if isinstance(module, (torch.nn.Conv2d, torch.nn.Linear)):
+                prune.l1_unstructured(module, name="weight", amount=self.amount)
+                prune.remove(module, name="weight")
+        print("Pruned model.")
+
+
+class QuantizeCallback(Callback):
+    def on_train_epoch_end(self, trainer, pl_module):
+        for name, module in pl_module.unet.named_modules():
+            if isinstance(module, (torch.nn.Conv2d, torch.nn.Linear)):
+                torch.quantization.quantize_dynamic(module, {torch.nn.Linear}, dtype=torch.qint8)
+        print("Quantized model.")

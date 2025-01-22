@@ -7,3 +7,4 @@ epochs: 1
 save_model: true
 num_train_steps: 1000
 device: cpu
+devices: 1
