@@ -1,10 +1,10 @@
 import io
 from typing import Generator
 
-from fastapi import FastAPI
+from diffusers import DDPMPipeline
+from fastapi import FastAPI, HTTPException
 from fastapi.responses import StreamingResponse
-
-from pokemon_ddpm.model import PokemonDDPM
+from prometheus_client import CollectorRegistry, Counter, Summary, make_asgi_app
 
 
 def lifespan(app: FastAPI) -> Generator[None, None, None]:
@@ -17,19 +17,30 @@ def lifespan(app: FastAPI) -> Generator[None, None, None]:
 
     del model
 
+registry = CollectorRegistry()
+error_counter = Counter("pokemon_ddpm_errors", "Number of errors that occurred", registry=registry)
+summary = Summary("pokemon_ddpm_request_processing_seconds", "Time spent processing request", registry=registry)
 
 app = FastAPI(lifespan=lifespan)
+app.mount("/metrics", make_asgi_app(registry=registry))
 
 
 @app.get("/sample")
-def sample():
-    print("Sampling from the model...")
-    samples = model.sample()
+async def sample():
+    try:
+        print("Sampling from the model...")
+        samples = model(num_inference_steps=200)
 
-    pil_image = samples[0][0]
+        pil_image = samples[0][0]
 
-    buffered = io.BytesIO()
-    pil_image.save(buffered, format="PNG")
-    img_bytes = buffered.getvalue()
+        buffered = io.BytesIO()
+        pil_image.save(buffered, format="PNG")
+        img_bytes = buffered.getvalue()
 
-    return StreamingResponse(io.BytesIO(img_bytes), media_type="image/png")
+        return StreamingResponse(io.BytesIO(img_bytes), media_type="image/png")
+    except Exception as e:
+        error_counter.inc()
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+
