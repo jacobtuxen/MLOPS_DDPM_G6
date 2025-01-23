@@ -513,7 +513,7 @@ Yes, we deployed our service in Cloud Run. The API returned a PIL image, which w
 >
 > Answer:
 
---- question 26 fill here ---
+We did not manage to implement monitoring. However, we would like to have monitoring implemented to measure the performance and health of our application over time. Monitoring would help us track key metrics such as response times, error rates, and resource utilization. However as we work with a DDPM with no guidance we have unsupervised learning, so some metrics such as error rates are more difficult and require some additional thinking, which we did not do in this projct.
 
 ## Overall discussion of project
 
@@ -532,7 +532,11 @@ Yes, we deployed our service in Cloud Run. The API returned a PIL image, which w
 >
 > Answer:
 
---- question 27 fill here ---
+s194572 used: 0.81 USD, this was mostly used for Bucket and Vertex AI
+s214786 used: 1.16 USD, this was mostly Cloud Run, and Vertex AI
+s216143 used: 0.20 USD, this was mostly used on the exercises (most traning by this student was done locally)
+
+The total cost of working in the cloud for this project was $2.17 USD. However, once we gain GPU access on Cloud Run, we anticipate significant improvements in performance and efficiency, which will greatly enhance our project's capabilities.
 
 ### Question 28
 
@@ -548,7 +552,7 @@ Yes, we deployed our service in Cloud Run. The API returned a PIL image, which w
 >
 > Answer:
 
---- question 28 fill here ---
+We created a very simple fronted which consisted of a button and a placeholder for loading the image from the inference API.
 
 ### Question 29
 
