@@ -228,7 +228,7 @@ In total we have implemented 4 tests. Primarily we are testing if the data is pr
 >
 > Answer:
 
---- question 8 fill here ---
+We have decided to include code coverage, with a total of 50% coverage. This includes all our source code. We are far from 100% coverage of our code, and even if we were, we would not trust it to be error-free. This is because code coverage only measures the percentage of code that is executed during testing, not the quality of the tests themselves. Therefore, even with 100% coverage, there could still be bugs in the code that are not caught by the tests. Additionally, code coverage does not guarantee that the code is correct, only that it has been tested. Therefore, it is important to have a combination of code coverage and other testing methods to ensure the code is error-free.
 
 ### Question 9
 
@@ -258,7 +258,7 @@ For our project, we did not use branches and PRs, as we considered the project s
 >
 > Answer: 
 
-We did make use of DVC in the following way: The data was downloaded and organized in the data folder, which was also added to the gitignore file such that the data only was in the cloud storage. The was pushed and stored in GCP storage in a bucket from where it could be pulled. This made sure that all team members had the same data and orginization. 
+We did make use of DVC in the following way: The data was downloaded and organized in the data folder, which was also added to the gitignore file such that the data only was in the cloud storage. The data was pushed and stored in GCP storage in a bucket from where it could be pulled. This made sure that all team members had the same data and organization. Additionally, DVC allowed us to version control our data, ensuring that any changes to the data were tracked and could be reverted if necessary. This improved collaboration and reproducibility in our project.
 
 
 ### Question 11
@@ -327,10 +327,12 @@ For logging hyperparameters, we used Hydra to load the configurations and manage
 >
 > Answer:
 
-[WNB_1](figures/WNB_SWEEP.png)
+<img src="figures/WNB_SWEEP.png" alt="WNB_1" width="600" height="400">
+
 As seen in the first image we have made a sweep over the learning rate and batch size. We have done this in order to find the optimal combination for minimizing the loss. We did 10 runs for the sweep, and the best run had a learning rate of 2e-4 and batch size 32.
 
-[WNB_2](figures/WNB_TRAIN_LOSS.png)
+<img src="figures/WNB_TRAIN_LOSS.png" alt="WNB_2" width="600" height="400">
+
 The second image shows the log we have made for the training loss. The import thing of tracking the loss is to see if the model is actually learning over time. 
 
 ### Question 15
@@ -411,7 +413,6 @@ We did not specifically use the compute engine, but it was used through Vertex a
 >
 > Answer:
 
-
 [GCP bucket screenshot](figures/DDPM-bucket.png)
 
 ### Question 20
@@ -420,7 +421,6 @@ We did not specifically use the compute engine, but it was used through Vertex a
 > **stored. You can take inspiration from [this figure](figures/registry.png).**
 >
 > Answer: 
-
 
 [GCP artifact registry screenshot](figures/DDPM-artifact-registry.png)
 
