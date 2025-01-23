@@ -569,7 +569,13 @@ We created a very simple fronted which consisted of a button and a placeholder f
 >
 > Answer:
 
---- question 29 fill here ---
+The starting point of the diagram is our PyTorch application, which we wrapped in the PyTorch Lightning framework. This setup allowed us to streamline our model training and experimentation process. We used Git for version control to manage our codebase effectively, ensuring that all changes were tracked and could be reverted if necessary.
+
+Our local data storage was managed using DVC (Data Version Control), which allowed us to fetch and version control our datasets efficiently. This ensured that all team members had access to the same data and could reproduce experiments reliably. The PyTorch application served as the main communication hub for our third-party libraries, such as Weights & Biases (W&B) for experiment tracking and our package manager for dependency management.
+
+To transition from a local setup to a cloud-based environment, we utilized Docker. Docker files were created to containerize our application, ensuring consistency across different environments. These Docker images were then pushed to the Google Artifact Registry, making them accessible for various cloud services.
+
+For data storage in the cloud, we used Google Cloud Storage (Bucket). This allowed us to store large datasets and access them from anywhere, facilitating collaboration and scalability. The connection between our local setup and the cloud storage was seamless, thanks to DVC and the integration with Google Cloud services.
 
 ### Question 30
 
