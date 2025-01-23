@@ -1,10 +1,11 @@
 import io
 from typing import Generator
 
-from diffusers import DDPMPipeline
 from fastapi import FastAPI, HTTPException
 from fastapi.responses import StreamingResponse
 from prometheus_client import CollectorRegistry, Counter, Summary, make_asgi_app
+
+from pokemon_ddpm.model import PokemonDDPM
 
 
 def lifespan(app: FastAPI) -> Generator[None, None, None]:
@@ -16,6 +17,7 @@ def lifespan(app: FastAPI) -> Generator[None, None, None]:
     yield
 
     del model
+
 
 registry = CollectorRegistry()
 error_counter = Counter("pokemon_ddpm_errors", "Number of errors that occurred", registry=registry)
@@ -29,7 +31,7 @@ app.mount("/metrics", make_asgi_app(registry=registry))
 async def sample():
     try:
         print("Sampling from the model...")
-        samples = model(num_inference_steps=200)
+        samples = model.sample()
 
         pil_image = samples[0][0]
 
@@ -41,6 +43,3 @@ async def sample():
     except Exception as e:
         error_counter.inc()
         raise HTTPException(status_code=500, detail=str(e))
-
-
-

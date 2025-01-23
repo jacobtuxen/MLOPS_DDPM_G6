@@ -34,7 +34,7 @@ class PokemonDDPM(LightningModule):
 
     def configure_optimizers(self) -> torch.optim.Optimizer:
         return torch.optim.AdamW(self.parameters(), lr=self.lr)
-    
+
     def from_pretrained(self, path) -> None:
         self.ddpm = DDPMPipeline.from_pretrained(pretrained_model_name_or_path=path, use_safetensors=False)
 

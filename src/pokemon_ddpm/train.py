@@ -34,7 +34,6 @@ def train(
 
 @hydra.main(config_path=str(_PATH_TO_CONFIG), config_name="train_config.yaml")
 def main(cfg):
-
     if cfg.use_wandb:
         setup_wandb_sweep(
             train_fn=train,
