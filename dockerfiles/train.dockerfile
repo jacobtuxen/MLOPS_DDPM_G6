@@ -10,6 +10,7 @@ RUN apt update && \
 COPY src src/
 COPY data data/
 COPY models models/
+COPY configs configs/
 COPY requirements.txt requirements.txt
 COPY pyproject.toml pyproject.toml
 
