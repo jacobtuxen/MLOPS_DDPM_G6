@@ -342,7 +342,13 @@ For logging hyperparameters, we used Hydra to load the configurations and manage
 >
 > Answer:
 
---- question 15 fill here ---
+For our project we developed several images: one for training, one for the the api and one for the frontend. For training the images was was pushed to a container in the artifact registry, from where a config file was created to train using the Vertex ai on the latest train image. The api dockerfile was also placed in a container in the artifact registry from where the cloud run was deployed using this image. 
+
+Since the current train:latest dockerfile is set up to run wandb it should be run using the vertex ai training file as this ensures that the wandb api key is passed to the image env.
+
+Training docker image `gcloud build submit . --config=vertex_ai_train.yaml`
+
+
 
 ### Question 16
 
