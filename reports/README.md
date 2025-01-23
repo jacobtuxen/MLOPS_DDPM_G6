@@ -228,7 +228,7 @@ In total we have implemented 4 tests. Primarily we are testing if the data is pr
 >
 > Answer:
 
---- question 8 fill here ---
+We have decided to include code coverage, with a total of 50% coverage. This includes all our source code. We are far from 100% coverage of our code, and even if we were, we would not trust it to be error-free. This is because code coverage only measures the percentage of code that is executed during testing, not the quality of the tests themselves. Therefore, even with 100% coverage, there could still be bugs in the code that are not caught by the tests. Additionally, code coverage does not guarantee that the code is correct, only that it has been tested. Therefore, it is important to have a combination of code coverage and other testing methods to ensure the code is error-free.
 
 ### Question 9
 
@@ -258,7 +258,7 @@ For our project, we did not use branches and PRs, as we considered the project s
 >
 > Answer: 
 
-We did make use of DVC in the following way: The data was downloaded and organized in the data folder, which was also added to the gitignore file such that the data only was in the cloud storage. The was pushed and stored in GCP storage in a bucket from where it could be pulled. This made sure that all team members had the same data and orginization. 
+We did make use of DVC in the following way: The data was downloaded and organized in the data folder, which was also added to the gitignore file such that the data only was in the cloud storage. The data was pushed and stored in GCP storage in a bucket from where it could be pulled. This made sure that all team members had the same data and organization. Additionally, DVC allowed us to version control our data, ensuring that any changes to the data were tracked and could be reverted if necessary. This improved collaboration and reproducibility in our project.
 
 
 ### Question 11
@@ -327,10 +327,12 @@ For logging hyperparameters, we used Hydra to load the configurations and manage
 >
 > Answer:
 
-[WNB_1](figures/WNB_SWEEP.png)
+<img src="figures/WNB_SWEEP.png" alt="WNB_1" width="600" height="400">
+
 As seen in the first image we have made a sweep over the learning rate and batch size. We have done this in order to find the optimal combination for minimizing the loss. We did 10 runs for the sweep, and the best run had a learning rate of 2e-4 and batch size 32.
 
-[WNB_2](figures/WNB_TRAIN_LOSS.png)
+<img src="figures/WNB_TRAIN_LOSS.png" alt="WNB_2" width="600" height="400">
+
 The second image shows the log we have made for the training loss. The import thing of tracking the loss is to see if the model is actually learning over time. 
 
 ### Question 15
@@ -404,7 +406,7 @@ We utilized several GCP services in our project. For data storage, we employed G
 >
 > Answer:
 
-We did not specifically use the compute engine, but it was used through Vertex ai as this service automatically launches a VM and close it after the experiments. For this n1-highmem-4 was used. However, a gpu could have optimized the training significantly, but we were unable to get access to one during the course period. This resulted in a very long training time taking several hours to complete the wandb sweep.
+We did not specifically use the compute engine to create any instances of a VM, but it was used through Vertex ai as this service automatically launches a VM and closes it after the experiments. For this a VM with a n1-highmem 4 cpu was used. Although using a GPU could have significantly optimized the training process, we were unable to obtain access to one during the course period due to an unanswered quota request. Consequently, the training time was extended, taking several hours to complete the WandB sweep. Therefore, we decided to also use DTUs HPC center to train the model more efficiently.
 
 ### Question 19
 
@@ -412,7 +414,6 @@ We did not specifically use the compute engine, but it was used through Vertex a
 > **You can take inspiration from [this figure](figures/bucket.png).**
 >
 > Answer:
-
 
 [GCP bucket screenshot](figures/DDPM-bucket.png)
 
@@ -422,7 +423,6 @@ We did not specifically use the compute engine, but it was used through Vertex a
 > **stored. You can take inspiration from [this figure](figures/registry.png).**
 >
 > Answer: 
-
 
 [GCP artifact registry screenshot](figures/DDPM-artifact-registry.png)
 
@@ -597,6 +597,6 @@ We managed to train our model in the cloud using Vertex ai. We did this by creat
 
 Student s216143 was in charge of proper data ingestion with preprocessing as input to the model. The student was also in charge of configuring wandb and setting up hyperparameter sweeps, and setting up some of the unit tests. 
 Student s194572 was in charge of setting up the model and training the model. The student also deployed the model in the cloud, as well as setting up the API.
-Student s was in charge of setting up docker containers, as well as setting up the cloud too. 
+Student s214786 was in charge of setting up docker containers, as well as setting up the cloud too. 
 All members contributed to the code by writing tests, helping each other, and debugging the code.
 We have used ChatGPT to help debug our code. Additionally, we used Github Copilot to help structure our code. 
