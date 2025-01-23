@@ -276,7 +276,12 @@ We did make use of DVC in the following way: The data was downloaded and organiz
 >
 > Answer:
 
-We use unit testing to test the data and training pipeline. This ensures that whenever someone wants to push some new code, we make sure everything works. We use cache for python version control and linting when creating our docker images.
+We use unit testing to test the data and training pipeline, employing pytest to generate reports. Additionally, we use Ruff for linting our code to PEP 8 standards, specifically using codes: ["I", "N", "F", "E"]. We also measure code coverage of our tests. All these processes are integrated with GitHub Actions, ensuring they run on every push and pull request to our master branch. Although we do not have strict rules associated with these checks, as we felt it would be too restrictive for a small group, we frequently ensure that all our GitHub Actions run without failure. This setup helps maintain code quality and consistency throughout the development process.
+
+Our continuous integration setup is organized into several workflows. The first workflow focuses on unit testing, where pytest is used to run tests and generate coverage reports. This ensures that our code is functioning correctly and helps identify any issues early in the development process. The second workflow is dedicated to linting, where Ruff checks our code against PEP 8 standards. This helps maintain a consistent coding style and improves code readability.
+
+By integrating these workflows with GitHub Actions, we automate the process of running tests and linting checks, reducing the manual effort required to maintain code quality. This setup also provides immediate feedback on code changes, allowing us to address any issues promptly. Overall, our continuous integration setup has been instrumental in ensuring the reliability and maintainability of our codebase, even without strict enforcement of rules.
+
 
 ## Running code and tracking experiments
 
