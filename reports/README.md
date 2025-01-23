@@ -327,11 +327,11 @@ We made use of config files. If we chose to run a train loop locally, the initia
 >
 > Answer:
 
-<img src="figures/WNB_SWEEP.png" alt="WNB_1" width="600" height="400">
+![WNB_1](figures/WNB_SWEEP_real.png)
 
 As seen in the first image we have made a sweep over the learning rate and batch size. We have done this in order to find the optimal combination for minimizing the loss. We did 10 runs for the sweep, and the best run had a learning rate of 2e-4 and batch size 32.
 
-<img src="figures/WNB_TRAIN_LOSS.png" alt="WNB_2" width="600" height="400">
+![WNB_2](figures/WNB_TRAIN_LOSS_real.png)
 
 The second image shows the log we have made for the training loss. The import thing of tracking the loss is to see if the model is actually learning over time. 
 
@@ -416,7 +416,7 @@ We did not specifically use the compute engine to create any instances of a VM, 
 >
 > Answer:
 
-<img src="figures/DDPM-bucket.png" alt="bucket" width="600" height="400">
+![BUCKET](figures/DDPM-bucket_real.png)
 
 ### Question 20
 
@@ -425,7 +425,7 @@ We did not specifically use the compute engine to create any instances of a VM, 
 >
 > Answer: 
 
-<img src="figures/DDPM-artifact-registry.png" alt="artifact-registry" width="600" height="400">
+![ARTIFACT REGISTRY](figures/DDPM-artifact-registry_real.png)
 
 ### Question 21
 
@@ -434,7 +434,7 @@ We did not specifically use the compute engine to create any instances of a VM, 
 >
 > Answer: 
 
-<img src="figures/DDPM-cloud-build.png" alt="cloud-build" width="600" height="400">
+![CLOUD BUILD](figures/DDPM-cloud-build_real.png)
 
 ### Question 22
 
