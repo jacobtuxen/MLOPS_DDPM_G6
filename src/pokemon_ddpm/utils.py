@@ -11,6 +11,36 @@ from pokemon_ddpm import _PATH_TO_OUTPUT
 from pokemon_ddpm.model import PokemonDDPM
 
 
+class SampleCallback(Callback):
+    def __init__(self):
+        if not os.path.exists(_PATH_TO_OUTPUT):
+            os.makedirs(_PATH_TO_OUTPUT)
+
+    def on_train_epoch_end(self, trainer, pl_module):
+        sample = pl_module.sample()
+        sample[0][0].save(_PATH_TO_OUTPUT / "sample.png")
+
+
+class PruneCallback(Callback):
+    def __init__(self, amount: float = 0.5):
+        self.amount = amount
+
+    def on_train_epoch_end(self, trainer, pl_module):
+        for name, module in pl_module.unet.named_modules():
+            if isinstance(module, (torch.nn.Conv2d, torch.nn.Linear)):
+                prune.l1_unstructured(module, name="weight", amount=self.amount)
+                prune.remove(module, name="weight")
+        print("Pruned model.")
+
+
+class QuantizeCallback(Callback):
+    def on_train_epoch_end(self, trainer, pl_module):
+        for name, module in pl_module.unet.named_modules():
+            if isinstance(module, (torch.nn.Conv2d, torch.nn.Linear)):
+                torch.quantization.quantize_dynamic(module, {torch.nn.Linear}, dtype=torch.qint8)
+        print("Quantized model.")
+
+
 def setup_wandb_sweep(
     train_fn: callable,
     sweep_file_path: str,
@@ -62,33 +92,3 @@ def setup_wandb_sweep(
         wandb.finish()
 
     wandb.agent(sweep_id, function=sweep_train_fn)
-
-
-class SampleCallback(Callback):
-    def __init__(self):
-        if not os.path.exists(_PATH_TO_OUTPUT):
-            os.makedirs(_PATH_TO_OUTPUT)
-
-    def on_train_epoch_end(self, trainer, pl_module):
-        sample = pl_module.sample()
-        sample[0][0].save(_PATH_TO_OUTPUT / "sample.png")
-
-
-class PruneCallback(Callback):
-    def __init__(self, amount: float = 0.5):
-        self.amount = amount
-
-    def on_train_epoch_end(self, trainer, pl_module):
-        for name, module in pl_module.unet.named_modules():
-            if isinstance(module, (torch.nn.Conv2d, torch.nn.Linear)):
-                prune.l1_unstructured(module, name="weight", amount=self.amount)
-                prune.remove(module, name="weight")
-        print("Pruned model.")
-
-
-class QuantizeCallback(Callback):
-    def on_train_epoch_end(self, trainer, pl_module):
-        for name, module in pl_module.unet.named_modules():
-            if isinstance(module, (torch.nn.Conv2d, torch.nn.Linear)):
-                torch.quantization.quantize_dynamic(module, {torch.nn.Linear}, dtype=torch.qint8)
-        print("Quantized model.")
