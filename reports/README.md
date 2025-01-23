@@ -143,7 +143,7 @@ s216143, s194572, s214786
 >
 > Answer:
 
---- question 3 fill here ---
+We used the third-party framework Huggingface in our project. We utilized the `diffuision` library from Huggingface to implement the DDPM model. The `diffusion` library provided pre-built model architectures and utilities that significantly accelerated our development process. Specifically, we used the `DDPMPipeline, 2DUnet and DDPMScheduler` class to load and fine-tune a pre-trained model for our specific task. This allowed us to leverage near SOTA model architectures without having to build them from scratch. Additionally, the library's extensive documentation and community support helped us troubleshoot issues and optimize our model effectively.
 
 ## Coding environment
 
@@ -228,7 +228,7 @@ In total we have implemented 4 tests. Primarily we are testing if the data is pr
 >
 > Answer:
 
-We have decided to include code coverage, with a total of 50% coverage. This includes all our source code. We are far from 100% coverage of our code, and even if we were, we would not trust it to be error-free. This is because code coverage only measures the percentage of code that is executed during testing, not the quality of the tests themselves. Therefore, even with 100% coverage, there could still be bugs in the code that are not caught by the tests. Additionally, code coverage does not guarantee that the code is correct, only that it has been tested. Therefore, it is important to have a combination of code coverage and other testing methods to ensure the code is error-free.
+We have decided to include code coverage, with a total of 56% coverage. This includes most of our source code. We are far from 100% coverage of our code, and even if we were, we would not trust it to be error-free. This is because code coverage only measures the percentage of code that is executed during testing, not the quality of the tests themselves. Therefore, even with 100% coverage, there could still be bugs in the code that are not caught by the tests. Additionally, code coverage does not guarantee that the code is correct, only that it has been tested. Therefore, it is important to have a combination of code coverage and other testing methods to ensure the code is error-free.
 
 ### Question 9
 
@@ -310,7 +310,7 @@ For logging hyperparameters, we used Hydra to load the configurations and manage
 >
 > Answer:
 
---- question 13 fill here ---
+We made use of config files. If we chose to run a train loop locally, the initial parameters were stored in the `train_config.yaml` file. If we chose to run it with wandb, the `sweep.yaml` file was used to initialize the run. Then, for each run, the given parameters were stored in the wandb dashboard. This ensured that no information was lost when running experiments and that the experiments were reproducible. To reproduce an experiment, one would have to run the same command with the same parameters, which would then be logged in wandb. Additionally, we ensured that all configuration files were version controlled, making it easy to track changes and revert to previous configurations if needed. This approach provided a robust framework for managing and reproducing experiments consistently.
 
 ### Question 14
 
@@ -374,6 +374,7 @@ Api docker image `docker run api:latest`
 > Answer:
 
 We profiled our code using pytorch lightning and one thing that could be worked on in the future is our dataloader.
+Our dataloader is working properly and efficiently loads the data for training. However, there is room for improvement in terms of computation and performance. Currently, the dataloader processes data sequentially, which can be a bottleneck when dealing with large datasets. In the future, we could implement a more optimized dataloader that leverages parallel processing or distributed data loading techniques. This would significantly reduce the data loading time and improve the overall training speed. Additionally, we could explore using advanced libraries such as Dask or Apache Spark for handling large-scale data processing tasks more efficiently.
 
 ## Working in the cloud
 
@@ -415,7 +416,7 @@ We did not specifically use the compute engine to create any instances of a VM, 
 >
 > Answer:
 
-[GCP bucket screenshot](figures/DDPM-bucket.png)
+<img src="figures/DDPM-bucket.png" alt="bucket" width="600" height="400">
 
 ### Question 20
 
@@ -424,7 +425,7 @@ We did not specifically use the compute engine to create any instances of a VM, 
 >
 > Answer: 
 
-[GCP artifact registry screenshot](figures/DDPM-artifact-registry.png)
+<img src="figures/DDPM-artifact-registry.png" alt="artifact-registry" width="600" height="400">
 
 ### Question 21
 
@@ -433,7 +434,7 @@ We did not specifically use the compute engine to create any instances of a VM, 
 >
 > Answer: 
 
-[GCP cloud build history screenshot](figures/DDPM-cloud-build.png)
+<img src="figures/DDPM-cloud-build.png" alt="cloud-build" width="600" height="400">
 
 ### Question 22
 
@@ -601,4 +602,5 @@ Student s216143 was in charge of proper data ingestion with preprocessing as inp
 Student s194572 was in charge of setting up the model and training the model. The student also deployed the model in the cloud, as well as setting up the API.
 Student s214786 was in charge of setting up docker containers, as well as setting up the cloud too. 
 All members contributed to the code by writing tests, helping each other, and debugging the code.
+
 We have used ChatGPT to help debug our code. Additionally, we used Github Copilot to help structure our code. 
