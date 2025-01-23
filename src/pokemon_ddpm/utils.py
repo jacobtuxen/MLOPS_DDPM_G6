@@ -8,12 +8,12 @@ from torch.nn.utils import prune
 
 import wandb
 from pokemon_ddpm import _PATH_TO_OUTPUT
+from pokemon_ddpm.model import PokemonDDPM
 
 
 def setup_wandb_sweep(
         train_fn: callable, 
         sweep_file_path: str, 
-        model: any, 
         train_set: any, 
         epochs: int, 
         device: str,
@@ -47,6 +47,7 @@ def setup_wandb_sweep(
     def sweep_train_fn():
         wandb.init()
         config = wandb.config
+        model = PokemonDDPM(lr=config["lr"])
 
         train_fn(
             model=model,

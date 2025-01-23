@@ -34,13 +34,11 @@ def train(
 
 @hydra.main(config_path=str(_PATH_TO_CONFIG), config_name="train_config.yaml")
 def main(cfg):
-    model = PokemonDDPM()
 
     if cfg.use_wandb:
         setup_wandb_sweep(
             train_fn=train,
             sweep_file_path=_PATH_TO_SWEEP,
-            model=model,
             train_set=PokemonDataset(_PATH_TO_DATA),
             epochs=cfg.epochs,
             device=cfg.device,
@@ -48,7 +46,7 @@ def main(cfg):
         )
     else:
         train(
-            model=model,
+            model=PokemonDDPM(),
             batch_size=cfg.batch_size,
             epochs=cfg.epochs,
             train_set=PokemonDataset(_PATH_TO_DATA),
