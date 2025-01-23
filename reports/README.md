@@ -143,7 +143,7 @@ s216143, s194572, s214786
 >
 > Answer:
 
-We used the third-party framework Huggingface in our project. We utilized the `diffuision` library from Huggingface to implement the DDPM model. The `diffusion` library provided pre-built model architectures and utilities that significantly accelerated our development process. Specifically, we used the `DDPMPipeline, 2DUnet and DDPMScheduler` class to load and fine-tune a pre-trained model for our specific task. This allowed us to leverage near SOTA model architectures without having to build them from scratch. Additionally, the library's extensive documentation and community support helped us troubleshoot issues and optimize our model effectively.
+We used the third-party framework Huggingface in our project. We utilized the `diffusion` library from Huggingface to implement the DDPM model. The `diffusion` library provided pre-built model architectures and utilities that significantly accelerated our development process. Specifically, we used the `DDPMPipeline`, `2DUnet`, and `DDPMScheduler` classes to load and fine-tune a pre-trained model for our specific task. This allowed us to leverage near SOTA model architectures without having to build them from scratch. Additionally, the library's extensive documentation and community support helped us troubleshoot issues and optimize our model effectively. Overall, Huggingface's tools were instrumental in achieving our project goals efficiently.
 
 ## Coding environment
 
@@ -179,7 +179,7 @@ To manage dependencies in our project, we used the 'requirements.txt' file to li
 >
 > Answer:
 
-We used the cookiecutter as a template and filled out the `data`, `models`, and `training` folders. We removed the `notebooks` folder as we did not use Jupyter notebooks. We added an `experiments` folder for configuration files. The `data` folder includes scripts for data ingestion and preprocessing, the `models` folder contains model definitions, and the `training` folder has training scripts. Additionally, we created a `scripts` folder for utility scripts. This structure helped maintain a clean and organized codebase, making it easier to navigate and collaborate.
+We used the cookiecutter as a template and filled out the `data`, `models`, and `training` folders. We removed the `notebooks` folder as we did not use Jupyter notebooks. We added an `experiments` folder for configuration files. The `data` folder includes scripts for data ingestion and preprocessing, the `models` folder contains model definitions, and the `training` folder has training scripts. Additionally, we created a `scripts` folder for utility scripts. This structure helped maintain a clean and organized codebase, making it easier to navigate and collaborate. By adhering to this structure, we ensured that each component of our project was modular and easily maintainable, which facilitated efficient teamwork and project management.
 
 ### Question 6
 
@@ -498,7 +498,7 @@ Yes, we deployed our service in Cloud Run. The API returned a PIL image, which w
 >
 > Answer:
 
---- question 25 fill here ---
+We chose to unit test our API by testing its root and its response status code as well. We did not perform testing on the sample API since it would have made our github workflow too slow. However, we did test the API locally and it worked as intended. For load testing, we would have used Locust to simulate multiple users accessing the API at the same time. This would have allowed us to measure the performance of the API under different loads and identify any bottlenecks or issues.
 
 ### Question 26
 
