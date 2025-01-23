@@ -213,7 +213,7 @@ For styling, we have used Ruff to set up the linting and formatting. We use typi
 >
 > Answer:
 
-In total we have implemented 4 tests. Primarily we are testing if the data is properly ingested and preprocessed, if the training loop is working as intended, if the model is setup correctly, and if the API is working.
+In total, we have implemented 4 tests. Primarily, we are testing if the data is properly ingested and preprocessed, ensuring that the data pipeline is functioning correctly. Additionally, we test if the training loop is working as intended, verifying that the model is being trained without errors. We also check if the model is set up correctly, confirming that the architecture and parameters are as expected. Lastly, we test if the API is working, ensuring that it can handle requests and return the correct responses.
 
 ### Question 8
 
@@ -329,11 +329,13 @@ We made use of config files. If we chose to run a train loop locally, the initia
 
 ![WNB_1](figures/WNB_SWEEP_real.png)
 
-As seen in the first image we have made a sweep over the learning rate and batch size. We have done this in order to find the optimal combination for minimizing the loss. We did 10 runs for the sweep, and the best run had a learning rate of 2e-4 and batch size 32.
+As seen in the first image we have made a sweep over the learning rate and batch size. We have done this in order to find the optimal combination for minimizing the loss. as it can be seen in the image, a higher learning rate will result in a higher loss, no matter the batch size. Overall, we did 10 runs for the sweep, and the best run had a learning rate of 2e-4 and batch size 32.
 
 ![WNB_2](figures/WNB_TRAIN_LOSS_real.png)
 
-The second image shows the log we have made for the training loss. The import thing of tracking the loss is to see if the model is actually learning over time. 
+The second image shows the log we have made for the training loss. The importance of tracking the loss is to see if the model is actually learning over time. As explained before, a high learning rate will result in a high loss. However, from the loss plot with respect to the epochs, we see that the runs with a high learning rate not only have a high loss but do not converge at all.
+
+If we look at the runs with a lower learning rate, we see that the loss converges quickly to a low value but then stays there. This could indicate that the model is overfitting the data, which makes sense since we only have 819 data points.
 
 ### Question 15
 
@@ -482,7 +484,7 @@ Yes, we used FastAPI to create an inference API for our model. We combined this 
 >
 > Answer:
 
-Yes, we deployed our service in Cloud Run. The API returned a PIL image, which we converted to bytes. This approach worked very well for our needs. By using Cloud Run, we ensured that our API was scalable and could handle multiple requests efficiently. The deployment process involved containerizing our FastAPI application and pushing the Docker image to the Artifact Registry. From there, we deployed the container to Cloud Run, which managed the infrastructure and scaling automatically. This setup allowed us to focus on developing the API without worrying about the underlying infrastructure.
+Yes, we deployed our service in Cloud Run. The API returned a PIL image, which we converted to bytes. This approach worked very well for our needs. By using Cloud Run, we ensured that our API was scalable and could handle multiple requests efficiently. The deployment process involved containerizing our FastAPI application and pushing the Docker image to the Artifact Registry. From there, we deployed the container to Cloud Run, which managed the infrastructure and scaling automatically. This setup allowed us to focus on developing the API without worrying about the underlying infrastructure. Additionally, Cloud Run provided built-in monitoring and logging, which helped us keep track of the API's performance and troubleshoot any issues that arose during deployment.
 
 
 ### Question 25
@@ -498,7 +500,7 @@ Yes, we deployed our service in Cloud Run. The API returned a PIL image, which w
 >
 > Answer:
 
-We chose to unit test our API by testing its root and its response status code as well. We did not perform testing on the sample API since it would have made our github workflow too slow. However, we did test the API locally and it worked as intended. For load testing, we would have used Locust to simulate multiple users accessing the API at the same time. This would have allowed us to measure the performance of the API under different loads and identify any bottlenecks or issues.
+We chose to unit test our API by testing its root and its response status code as well. We did not perform testing on the sample API since it would have made our GitHub workflow too slow. However, we did test the API locally and it worked as intended. For load testing, we would have used Locust to simulate multiple users accessing the API at the same time. This would have allowed us to measure the performance of the API under different loads and identify any bottlenecks or issues. Additionally, load testing would help us understand the scalability of our API and ensure it can handle high traffic without degrading performance. By identifying potential performance issues early, we could optimize our API to provide a better user experience.
 
 ### Question 26
 
@@ -513,7 +515,7 @@ We chose to unit test our API by testing its root and its response status code a
 >
 > Answer:
 
-We did not manage to implement monitoring. However, we would like to have monitoring implemented to measure the performance and health of our application over time. Monitoring would help us track key metrics such as response times, error rates, and resource utilization. However as we work with a DDPM with no guidance we have unsupervised learning, so some metrics such as error rates are more difficult and require some additional thinking, which we did not do in this projct.
+We did not manage to implement monitoring. However, we would like to have monitoring implemented to measure the performance and health of our application over time. Monitoring would help us track key metrics such as response times, error rates, and resource utilization, enabling us to identify potential issues and optimize the system for better performance. However, as we work with a DDPM with no guidance, we are primarily using unsupervised learning, which makes monitoring certain metrics, such as error rates, more challenging. These challenges require some additional thinking and effort, which we unfortunately did not allocate time for in this project.
 
 ## Overall discussion of project
 
@@ -536,7 +538,7 @@ s194572 used: 0.81 USD, this was mostly used for Bucket and Vertex AI
 s214786 used: 1.16 USD, this was mostly Cloud Run, and Vertex AI
 s216143 used: 0.20 USD, this was mostly used on the exercises (most traning by this student was done locally)
 
-The total cost of working in the cloud for this project was $2.17 USD. However, once we gain GPU access on Cloud Run, we anticipate significant improvements in performance and efficiency, which will greatly enhance our project's capabilities.
+The total cost of working in the cloud for this project was $2.17 USD. However, once we gain GPU access on Cloud Run, we anticipate significant improvements in performance and efficiency, which will greatly enhance our project's capabilities. Working in the cloud was a positive experience overall, because we have learnt a lot about how to deploy models and APIs. 
 
 ### Question 28
 
