@@ -466,7 +466,7 @@ We managed to train our model in the cloud using Vertex ai. We did this by creat
 >
 > Answer:
 
---- question 23 fill here ---
+Yes, we used FastAPI to create an inference API for our model. We combined this with a Dockerfile to push the container to the Artifact Registry, allowing us to deploy it on Cloud Run. This setup worked well for deploying the API. However, due to the lack of GPU quota on Cloud Run (we have requested it but are still waiting), the inference time was significantly slower. Running a UNet model on a CPU for 100 iterations resulted in slow performance. Despite this, the deployment process was smooth, and the API functioned correctly, demonstrating the feasibility of our approach once GPU resources become available.
 
 ### Question 24
 
@@ -482,7 +482,8 @@ We managed to train our model in the cloud using Vertex ai. We did this by creat
 >
 > Answer:
 
---- question 24 fill here ---
+Yes, we deployed our service in Cloud Run. The API returned a PIL image, which we converted to bytes. This approach worked very well for our needs. By using Cloud Run, we ensured that our API was scalable and could handle multiple requests efficiently. The deployment process involved containerizing our FastAPI application and pushing the Docker image to the Artifact Registry. From there, we deployed the container to Cloud Run, which managed the infrastructure and scaling automatically. This setup allowed us to focus on developing the API without worrying about the underlying infrastructure.
+
 
 ### Question 25
 
