@@ -577,7 +577,9 @@ We managed to train our model in the cloud using Vertex ai. We did this by creat
 >
 > Answer:
 
---- question 30 fill here ---
+Although most of the project was implemented smoothly and few challenges were encountered, the biggest challenge was ensuring that the project root was consistent both in the project itself and in the Dockerfiles. An incorrect project root resulted in incorrect paths, causing the training to fail due to an incorrect data path. Initially, the root was correctly specified in the project folder, but in the Docker image, the src/pokemon_ddpm/__init__.py file was placed in the python3.11 folder, which disrupted all the paths. This issue was resolved and ensured complete consistency in the Dockerfiles. This resulted in all paths being correct and the training images being contructed correctly making it possible to run the training and etc. in the cloud.
+
+Furthermore, a significant challenge has been working in the cloud. This has primarily been due to issues with logging and quotas. The logging has been somewhat difficult to read, making debugging harder than necessary. Additionally, working with quotas has been challenging due to long response times on quota requests, making it difficult to obtain sufficient computational power for training the model and running inference. This led to us using the DTU HPC instead as this made it easier to complete training and inference.
 
 ### Question 31
 
