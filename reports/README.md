@@ -597,6 +597,6 @@ We managed to train our model in the cloud using Vertex ai. We did this by creat
 
 Student s216143 was in charge of proper data ingestion with preprocessing as input to the model. The student was also in charge of configuring wandb and setting up hyperparameter sweeps, and setting up some of the unit tests. 
 Student s194572 was in charge of setting up the model and training the model. The student also deployed the model in the cloud, as well as setting up the API.
-Student s was in charge of setting up docker containers, as well as setting up the cloud too. 
+Student s214786 was in charge of setting up docker containers, as well as setting up the cloud too. 
 All members contributed to the code by writing tests, helping each other, and debugging the code.
 We have used ChatGPT to help debug our code. Additionally, we used Github Copilot to help structure our code. 
