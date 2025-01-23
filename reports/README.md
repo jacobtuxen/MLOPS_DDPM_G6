@@ -129,7 +129,7 @@ will check the repositories and the code to verify your answers.
 >
 > Answer:
 
-s216143, s194572, s
+s216143, s194572, s214786
 
 ### Question 3
 > **A requirement to the project is that you include a third-party package not covered in the course. What framework**
@@ -371,7 +371,7 @@ For logging hyperparameters, we used Hydra to load the configurations and manage
 > Example:
 > *We used the following two services: Engine and Bucket. Engine is used for... and Bucket is used for...*
 >
-> Answer:
+> Answer: We utilized several GCP services in our project. For data storage, we employed Google Cloud Storage (Bucket). Secret Manger was used to store wandb api key. Cloud Build was used to build Docker images and manage secrets for Vertex AI runs. Artifact Registry was used to store our Docker images. Additionally, Vertex AI was leveraged for training models and running hyperparameter sweeps. Lastly, we used Cloud run as backend for deployment of the api.
 
 --- question 17 fill here ---
 
@@ -386,7 +386,7 @@ For logging hyperparameters, we used Hydra to load the configurations and manage
 > *We used the compute engine to run our ... . We used instances with the following hardware: ... and we started the*
 > *using a custom container: ...*
 >
-> Answer:
+> Answer: We did not specifically use the compute engine, but it was used through Vertex ai as this service automatically launches a VM and close it after the experiments. For this n1-highmem-4 was used. However, a gpu could have optimized the training significantly, but we were unable to get access to one during the course period. This resulted in a very long training time taking several hours to complete the wandb sweep. 
 
 --- question 18 fill here ---
 
@@ -395,7 +395,8 @@ For logging hyperparameters, we used Hydra to load the configurations and manage
 > **Insert 1-2 images of your GCP bucket, such that we can see what data you have stored in it.**
 > **You can take inspiration from [this figure](figures/bucket.png).**
 >
-> Answer:
+> Answer: [GCP bucket screenshot](figures/DDPM-bucket.png)
+
 
 --- question 19 fill here ---
 
@@ -404,7 +405,8 @@ For logging hyperparameters, we used Hydra to load the configurations and manage
 > **Upload 1-2 images of your GCP artifact registry, such that we can see the different docker images that you have**
 > **stored. You can take inspiration from [this figure](figures/registry.png).**
 >
-> Answer:
+> Answer: [GCP artifact registry screenshot](figures/DDPM-artifact-registry.png)
+
 
 --- question 20 fill here ---
 
@@ -413,7 +415,7 @@ For logging hyperparameters, we used Hydra to load the configurations and manage
 > **Upload 1-2 images of your GCP cloud build history, so we can see the history of the images that have been build in**
 > **your project. You can take inspiration from [this figure](figures/build.png).**
 >
-> Answer:
+> Answer: [GCP cloud build history screenshot](figures/DDPM-cloud-build.png)
 
 --- question 21 fill here ---
 
@@ -428,7 +430,7 @@ For logging hyperparameters, we used Hydra to load the configurations and manage
 > *We managed to train our model in the cloud using the Engine. We did this by ... . The reason we choose the Engine*
 > *was because ...*
 >
-> Answer:
+> Answer: We managed to train our model in the cloud using Vertex ai. We did this by creating a vertex ai training file, which runs the cpu_config.yaml file while making sure that the wandb api key is passed correctly to the image environment from the secrets manager. This also allowed for easy adjustments to the cpu config file, if a different VM or image is needed. We started out using n1-highmem-2 but this was to little memory for training the model. Therefore we switched to n1-highmem-4 which had enough memory to train the model. Ideally, we wanted to train on a gpu, but we were unable to get any quota requests accepted.
 
 --- question 22 fill here ---
 
