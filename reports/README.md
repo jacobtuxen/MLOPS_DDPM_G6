@@ -407,7 +407,7 @@ We utilized several GCP services in our project. For data storage, we employed G
 >
 > Answer:
 
-We did not specifically use the compute engine, but it was used through Vertex ai as this service automatically launches a VM and close it after the experiments. For this n1-highmem-4 was used. However, a gpu could have optimized the training significantly, but we were unable to get access to one during the course period. This resulted in a very long training time taking several hours to complete the wandb sweep.
+We did not specifically use the compute engine to create any instances of a VM, but it was used through Vertex ai as this service automatically launches a VM and closes it after the experiments. For this a VM with a n1-highmem 4 cpu was used. Although using a GPU could have significantly optimized the training process, we were unable to obtain access to one during the course period due to an unanswered quota request. Consequently, the training time was extended, taking several hours to complete the WandB sweep. Therefore, we decided to also use DTUs HPC center to train the model more efficiently.
 
 ### Question 19
 
@@ -598,8 +598,7 @@ We managed to train our model in the cloud using Vertex ai. We did this by creat
 
 Student s216143 was in charge of proper data ingestion with preprocessing as input to the model. The student was also in charge of configuring wandb and setting up hyperparameter sweeps, and setting up some of the unit tests. 
 Student s194572 was in charge of setting up the model and training the model. The student also deployed the model in the cloud, as well as setting up the API.
-Student s was in charge of setting up docker containers, as well as setting up the cloud too. 
-
+Student s214786 was in charge of setting up docker containers, as well as setting up the cloud too. 
 All members contributed to the code by writing tests, helping each other, and debugging the code.
 
 We have used ChatGPT to help debug our code. Additionally, we used Github Copilot to help structure our code. 
