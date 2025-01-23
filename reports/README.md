@@ -162,8 +162,7 @@ We used the third-party framework Huggingface in our project. We utilized the `d
 > *complete copy of our development environment, one would have to run the following commands*
 >
 > Answer:
-
-To manage dependencies in our project, we used the 'requirements.txt' file to list all the necessary packages. Then, each member of the group can get the exact copy of the env. by installing w.r.t. the requirements. If one member installs a new package, they can update the 'requirements.txt' file by running pipreqs.
+We managed our dependencies using `pipreqs` to generate the `requirements.txt` file. For developer-specific packages, we included them directly in the Dockerfiles. Each team member used Conda to create virtual environments tailored to this project, ensuring consistency across different development setups. To replicate our environment, a new team member would need to clone the repository, create a Conda environment using Python 3.11, and install the dependencies listed in `requirements.txt`. This approach streamlined our development process, making it easier to manage dependencies and maintain a consistent environment across all team members' systems, ensuring smooth collaboration. Overall this proccess very smooth, fast and streamlined.
 
 ### Question 5
 
