@@ -143,7 +143,7 @@ s216143, s194572, s214786
 >
 > Answer:
 
---- question 3 fill here ---
+We used the third-party framework Huggingface in our project. We utilized the `diffuision` library from Huggingface to implement the DDPM model. The `diffusion` library provided pre-built model architectures and utilities that significantly accelerated our development process. Specifically, we used the `DDPMPipeline, 2DUnet and DDPMScheduler` class to load and fine-tune a pre-trained model for our specific task. This allowed us to leverage near SOTA model architectures without having to build them from scratch. Additionally, the library's extensive documentation and community support helped us troubleshoot issues and optimize our model effectively.
 
 ## Coding environment
 
