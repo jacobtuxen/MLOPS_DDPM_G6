@@ -185,6 +185,5 @@ cython_debug/
 
 # folders and files
 data/
-reports/figures/
 models/
 wandb/
