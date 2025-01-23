@@ -350,6 +350,8 @@ Training docker image `gcloud build submit . --config=vertex_ai_train.yaml`
 
 
 
+
+
 ### Question 16
 
 > **When running into bugs while trying to run your experiments, how did you perform debugging? Additionally, did you**
@@ -363,7 +365,7 @@ Training docker image `gcloud build submit . --config=vertex_ai_train.yaml`
 >
 > Answer:
 
---- question 16 fill here ---
+We profiled our code using pytorch lightning and one thing that could be worked on in the future is our dataloader.
 
 ## Working in the cloud
 
