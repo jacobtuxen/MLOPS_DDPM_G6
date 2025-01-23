@@ -179,7 +179,7 @@ To manage dependencies in our project, we used the 'requirements.txt' file to li
 >
 > Answer:
 
-From the cookiecutter template we have primarly used the src folder, data, model, and tests folders. We have removed the ...
+We used the cookiecutter as a template and filled out the `data`, `models`, and `training` folders. We removed the `notebooks` folder as we did not use Jupyter notebooks. We added an `experiments` folder for configuration files. The `data` folder includes scripts for data ingestion and preprocessing, the `models` folder contains model definitions, and the `training` folder has training scripts. Additionally, we created a `scripts` folder for utility scripts. This structure helped maintain a clean and organized codebase, making it easier to navigate and collaborate.
 
 ### Question 6
 
