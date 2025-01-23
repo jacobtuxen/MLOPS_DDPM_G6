@@ -256,9 +256,10 @@ For our project, we did not use branches and PRs, as we considered the project s
 > *We did make use of DVC in the following way: ... . In the end it helped us in ... for controlling ... part of our*
 > *pipeline*
 >
-> Answer:
+> Answer: 
 
---- question 10 fill here ---
+We did make use of DVC in the following way: The data was downloaded and organized in the data folder, which was also added to the gitignore file such that the data only was in the cloud storage. The was pushed and stored in GCP storage in a bucket from where it could be pulled. This made sure that all team members had the same data and orginization. 
+
 
 ### Question 11
 
