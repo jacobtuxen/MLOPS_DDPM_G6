@@ -11,7 +11,7 @@ def lifespan(app: FastAPI) -> Generator[None, None, None]:
     """Load model and classes, and create database file."""
     global model
     model = PokemonDDPM()
-    model.ddpm.from_pretrained(pretrained_model_name_or_path="models/", use_safetensors=False)
+    model.from_pretrained(path="models/")
 
     yield
 
