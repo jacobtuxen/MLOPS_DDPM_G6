@@ -12,13 +12,13 @@ from pokemon_ddpm.model import PokemonDDPM
 
 
 def setup_wandb_sweep(
-        train_fn: callable, 
-        sweep_file_path: str, 
-        train_set: any, 
-        epochs: int, 
-        device: str,
-        devices: int = 1,
-    ) -> None:
+    train_fn: callable,
+    sweep_file_path: str,
+    train_set: any,
+    epochs: int,
+    device: str,
+    devices: int = 1,
+) -> None:
     """Setup wandb for logging and configure sweeps for hyperparameter tuning.
 
     Args:
