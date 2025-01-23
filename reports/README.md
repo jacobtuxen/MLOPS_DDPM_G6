@@ -194,7 +194,7 @@ From the cookiecutter template we have primarly used the src folder, data, model
 >
 > Answer:
 
-For styling we have used Ruff to setup the linting and formatting. We use typing to identify input parameters for each functions, such that when recalled it is easier for the reader to know, what each input parameters takes as values. Also, for each function we write a docstring to explain what the function does, what the input parameters are and what the output is. This is important in larger projects because it makes the code more readable and understandable for other developers.
+For styling, we have used Ruff to set up the linting and formatting. We use typing to identify input parameters for each function, such that when recalled, it is easier for the reader to know what each input parameter takes as values. Additionally, for each function, we write a docstring to explain what the function does, what the input parameters are, and what the output is. This is important in larger projects because if ever in doubt about what a function does, one can simply read the docstring and get a quick overview of the function, as well as its parameters and intended output. Furthermore, maintaining consistent code quality and documentation helps in onboarding new team members and ensures that the codebase remains understandable and maintainable over time.
 
 ## Version control
 
@@ -243,7 +243,7 @@ In total we have implemented 4 tests. Primarily we are testing if the data is pr
 >
 > Answer:
 
-For our project, we did not use branches and PRs, as we considered the project small enough to manage without them, and we are only three members. This allowed us to work on the same branch efficiently. However, in larger projects, branches and PRs are crucial for maintaining an overview and preventing merge conflicts. By having one person manage the main branch, other members can work on their own branches and submit PRs when ready. This ensures the main branch remains clean and up-to-date.
+For our project, we did not use branches and PRs, as we considered the project small enough to manage without them, and we are only three members. This allowed us to work on the same branch efficiently. However, in larger projects, branches and PRs are crucial for maintaining an overview and preventing merge conflicts. By having one person manage the main branch, other members can work on their own branches and submit PRs when ready. This ensures the main branch remains clean and up-to-date. Additionally, PRs allow for code reviews, which can improve code quality and catch potential issues early.
 
 ### Question 10
 
@@ -327,7 +327,11 @@ For logging hyperparameters, we used Hydra to load the configurations and manage
 >
 > Answer:
 
---- question 14 fill here ---
+[WNB_1](figures/WNB_SWEEP.png)
+As seen in the first image we have made a sweep over the learning rate and batch size. We have done this in order to find the optimal combination for minimizing the loss. We did 10 runs for the sweep, and the best run had a learning rate of 2e-4 and batch size 32.
+
+[WNB_2](figures/WNB_TRAIN_LOSS.png)
+The second image shows the log we have made for the training loss. The import thing of tracking the loss is to see if the model is actually learning over time. 
 
 ### Question 15
 
@@ -342,7 +346,15 @@ For logging hyperparameters, we used Hydra to load the configurations and manage
 >
 > Answer:
 
---- question 15 fill here ---
+For our project we developed several images: one for training, one for the the api and one for the frontend. For training the images was was pushed to a container in the artifact registry, from where a config file was created to train using the Vertex ai on the latest train image. The api dockerfile was also placed in a container in the artifact registry from where the cloud run was deployed using this image. 
+
+Since the current train:latest dockerfile is set up to run wandb it should be run using the vertex ai training file as this ensures that the wandb api key is passed to the image env.
+
+Training docker image `gcloud build submit . --config=vertex_ai_train.yaml`
+
+
+
+
 
 ### Question 16
 
@@ -357,7 +369,7 @@ For logging hyperparameters, we used Hydra to load the configurations and manage
 >
 > Answer:
 
---- question 16 fill here ---
+We profiled our code using pytorch lightning and one thing that could be worked on in the future is our dataloader.
 
 ## Working in the cloud
 
@@ -372,9 +384,10 @@ For logging hyperparameters, we used Hydra to load the configurations and manage
 > Example:
 > *We used the following two services: Engine and Bucket. Engine is used for... and Bucket is used for...*
 >
-> Answer: We utilized several GCP services in our project. For data storage, we employed Google Cloud Storage (Bucket). Secret Manger was used to store wandb api key. Cloud Build was used to build Docker images and manage secrets for Vertex AI runs. Artifact Registry was used to store our Docker images. Additionally, Vertex AI was leveraged for training models and running hyperparameter sweeps. Lastly, we used Cloud run as backend for deployment of the api.
+> Answer: 
 
---- question 17 fill here ---
+We utilized several GCP services in our project. For data storage, we employed Google Cloud Storage (Bucket). Secret Manger was used to store wandb api key. Cloud Build was used to build Docker images and manage secrets for Vertex AI runs. Artifact Registry was used to store our Docker images. Additionally, Vertex AI was leveraged for training models and running hyperparameter sweeps. Lastly, we used Cloud run as backend for deployment of the api.
+We utilized several GCP services in our project. For data storage, we employed Google Cloud Storage (Bucket). Secret Manger was used to store wandb api key. Cloud Build was used to build Docker images and manage secrets for Vertex AI runs. Artifact Registry was used to store our Docker images. Additionally, Vertex AI was leveraged for training models and running hyperparameter sweeps. Lastly, we used Cloud run as backend for deployment of the api.
 
 ### Question 18
 
@@ -387,38 +400,38 @@ For logging hyperparameters, we used Hydra to load the configurations and manage
 > *We used the compute engine to run our ... . We used instances with the following hardware: ... and we started the*
 > *using a custom container: ...*
 >
-> Answer: We did not specifically use the compute engine, but it was used through Vertex ai as this service automatically launches a VM and close it after the experiments. For this n1-highmem-4 was used. However, a gpu could have optimized the training significantly, but we were unable to get access to one during the course period. This resulted in a very long training time taking several hours to complete the wandb sweep. 
+> Answer:
 
---- question 18 fill here ---
+We did not specifically use the compute engine, but it was used through Vertex ai as this service automatically launches a VM and close it after the experiments. For this n1-highmem-4 was used. However, a gpu could have optimized the training significantly, but we were unable to get access to one during the course period. This resulted in a very long training time taking several hours to complete the wandb sweep.
 
 ### Question 19
 
 > **Insert 1-2 images of your GCP bucket, such that we can see what data you have stored in it.**
 > **You can take inspiration from [this figure](figures/bucket.png).**
 >
-> Answer: [GCP bucket screenshot](figures/DDPM-bucket.png)
+> Answer:
 
 
---- question 19 fill here ---
+[GCP bucket screenshot](figures/DDPM-bucket.png)
 
 ### Question 20
 
 > **Upload 1-2 images of your GCP artifact registry, such that we can see the different docker images that you have**
 > **stored. You can take inspiration from [this figure](figures/registry.png).**
 >
-> Answer: [GCP artifact registry screenshot](figures/DDPM-artifact-registry.png)
+> Answer: 
 
 
---- question 20 fill here ---
+[GCP artifact registry screenshot](figures/DDPM-artifact-registry.png)
 
 ### Question 21
 
 > **Upload 1-2 images of your GCP cloud build history, so we can see the history of the images that have been build in**
 > **your project. You can take inspiration from [this figure](figures/build.png).**
 >
-> Answer: [GCP cloud build history screenshot](figures/DDPM-cloud-build.png)
+> Answer: 
 
---- question 21 fill here ---
+[GCP cloud build history screenshot](figures/DDPM-cloud-build.png)
 
 ### Question 22
 
@@ -431,9 +444,9 @@ For logging hyperparameters, we used Hydra to load the configurations and manage
 > *We managed to train our model in the cloud using the Engine. We did this by ... . The reason we choose the Engine*
 > *was because ...*
 >
-> Answer: We managed to train our model in the cloud using Vertex ai. We did this by creating a vertex ai training file, which runs the cpu_config.yaml file while making sure that the wandb api key is passed correctly to the image environment from the secrets manager. This also allowed for easy adjustments to the cpu config file, if a different VM or image is needed. We started out using n1-highmem-2 but this was to little memory for training the model. Therefore we switched to n1-highmem-4 which had enough memory to train the model. Ideally, we wanted to train on a gpu, but we were unable to get any quota requests accepted.
+> Answer:
 
---- question 22 fill here ---
+We managed to train our model in the cloud using Vertex ai. We did this by creating a vertex ai training file, which runs the cpu_config.yaml file while making sure that the wandb api key is passed correctly to the image environment from the secrets manager. This also allowed for easy adjustments to the cpu config file, if a different VM or image is needed. We started out using n1-highmem-2 but this was to little memory for training the model. Therefore we switched to n1-highmem-4 which had enough memory to train the model. Ideally, we wanted to train on a gpu, but we were unable to get any quota requests accepted.
 
 ## Deployment
 
@@ -580,8 +593,8 @@ For logging hyperparameters, we used Hydra to load the configurations and manage
 > *We have used ChatGPT to help debug our code. Additionally, we used GitHub Copilot to help write some of our code.*
 > Answer:
 
-Student s216143 was in charge of setting up the data with preprocessing as input for the model. The student was also in charge of configuring wandb and setting up hyperparameter sweeps. 
+Student s216143 was in charge of proper data ingestion with preprocessing as input to the model. The student was also in charge of configuring wandb and setting up hyperparameter sweeps, and setting up some of the unit tests. 
 Student s194572 was in charge of setting up the model and training the model. The student also deployed the model in the cloud, as well as setting up the API.
-Student s was in charge of setting up docker containers, as well as setting up the cloud as well. 
+Student s was in charge of setting up docker containers, as well as setting up the cloud too. 
 All members contributed to the code by writing tests, helping each other, and debugging the code.
 We have used ChatGPT to help debug our code. Additionally, we used Github Copilot to help structure our code. 
