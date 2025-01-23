@@ -404,7 +404,7 @@ We utilized several GCP services in our project. For data storage, we employed G
 >
 > Answer:
 
-We did not specifically use the compute engine, but it was used through Vertex ai as this service automatically launches a VM and close it after the experiments. For this n1-highmem-4 was used. However, a gpu could have optimized the training significantly, but we were unable to get access to one during the course period. This resulted in a very long training time taking several hours to complete the wandb sweep.
+We did not specifically use the compute engine to create any instances of a VM, but it was used through Vertex ai as this service automatically launches a VM and closes it after the experiments. For this a VM with a n1-highmem 4 cpu was used. Although using a GPU could have significantly optimized the training process, we were unable to obtain access to one during the course period due to an unanswered quota request. Consequently, the training time was extended, taking several hours to complete the WandB sweep. Therefore, we decided to also use DTUs HPC center to train the model more efficiently.
 
 ### Question 19
 
