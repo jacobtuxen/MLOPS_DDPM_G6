@@ -352,7 +352,9 @@ Since the current train:latest dockerfile is set up to run wandb it should be ru
 
 Training docker image `gcloud build submit . --config=vertex_ai_train.yaml`
 
+Link to docker file: <https://github.com/jacobtuxen/MLOPS_DDPM_G6/blob/master/dockerfiles/api.dockerfile>
 
+Api docker image `docker run api:latest`
 
 
 
