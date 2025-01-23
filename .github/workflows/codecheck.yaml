@@ -15,11 +15,11 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: 3.9
+          python-version: 3.13
           cache: 'pip'
       - name: Install dependencies
         run: |
-          pip install --upgrade ruff
+          pip install ruff==0.9.2
           pip list
       - name: Ruff check
         run: ruff check .
