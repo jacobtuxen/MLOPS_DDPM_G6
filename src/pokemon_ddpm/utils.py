@@ -17,6 +17,7 @@ def setup_wandb_sweep(
         train_set: any, 
         epochs: int, 
         device: str,
+        devices: int = 1,
     ) -> None:
     """Setup wandb for logging and configure sweeps for hyperparameter tuning.
 
@@ -54,6 +55,7 @@ def setup_wandb_sweep(
             train_set=train_set,
             device=device,
             wandb_active=True,
+            devices=devices,
         )
 
         wandb.finish()
