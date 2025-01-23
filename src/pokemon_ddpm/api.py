@@ -1,4 +1,5 @@
 import io
+import os
 from typing import Generator
 
 from fastapi import FastAPI, HTTPException
@@ -12,7 +13,9 @@ def lifespan(app: FastAPI) -> Generator[None, None, None]:
     """Load model and classes, and create database file."""
     global model
     model = PokemonDDPM()
-    model.from_pretrained(path="models/")
+    
+    if os.path.exists("models/unet"):
+        model.from_pretrained(path="models/")
 
     yield
 
@@ -25,6 +28,10 @@ summary = Summary("pokemon_ddpm_request_processing_seconds", "Time spent process
 
 app = FastAPI(lifespan=lifespan)
 app.mount("/metrics", make_asgi_app(registry=registry))
+
+@app.get("/")
+async def read_root():
+    return {"Hello": "This is the root!"}
 
 
 @app.get("/sample")
