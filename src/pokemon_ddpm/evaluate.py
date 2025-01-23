@@ -4,7 +4,7 @@ from pokemon_ddpm import _PATH_TO_MODELS
 from pokemon_ddpm.model import PokemonDDPM
 
 
-def sample_model(model, num_samples):
+def sample_model(model: any, num_samples: int) -> any:
     """Sample from the model."""
     samples = model(batch_size=num_samples)
     return samples

@@ -107,7 +107,7 @@ will check the repositories and the code to verify your answers.
 * [ ] Write some documentation for your application (M32)
 * [ ] Publish the documentation to GitHub Pages (M32)
 * [ ] Revisit your initial project description. Did the project turn out as you wanted?
-* [ ] Create an architectural diagram over your MLOps pipeline
+* [x] Create an architectural diagram over your MLOps pipeline
 * [x] Make sure all group members have an understanding about all parts of the project
 * [x] Uploaded all your code to GitHub
 
@@ -213,7 +213,7 @@ For styling we have used Ruff to setup the linting and formatting. We use typing
 >
 > Answer:
 
-In total we have implemented X tests. Primarily we are testing if the data is properly ingested and preprocessed, and if the training loop is working as intended.
+In total we have implemented 4 tests. Primarily we are testing if the data is properly ingested and preprocessed, if the training loop is working as intended, if the model is setup correctly, and if the API is working.
 
 ### Question 8
 
@@ -294,7 +294,7 @@ We use unit testing to test the data and training pipeline. This ensures that wh
 >
 > Answer:
 
-For logging hyperparameters, we used Hydra to load the configurations and manage our hyperparameters locally. We then had a sweep.yaml file for wandb to run hyperparameter sweeps. For example, to run an experiment we would run `python train.py lr=1e-3 batch_size=64`.
+For logging hyperparameters, we used Hydra to load the configurations and manage our hyperparameters locally. We then have a sweep.yaml file for wandb to run hyperparameter sweeps. If one wanted to train with a wandb sweep they would have to configer the `train_config.yaml` and set `use_wandb=true`. Then they would run the following command: `python train.py`.
 
 ### Question 13
 
@@ -577,4 +577,8 @@ For logging hyperparameters, we used Hydra to load the configurations and manage
 > *We have used ChatGPT to help debug our code. Additionally, we used GitHub Copilot to help write some of our code.*
 > Answer:
 
---- question 31 fill here ---
+Student s216143 was in charge of setting up the data with preprocessing as input for the model. The student was also in charge of configuring wandb and setting up hyperparameter sweeps. 
+Student s194572 was in charge of setting up the model and training the model. The student also deployed the model in the cloud, as well as setting up the API.
+Student s was in charge of setting up docker containers, as well as setting up the cloud as well. 
+All members contributed to the code by writing tests, helping each other, and debugging the code.
+We have used ChatGPT to help debug our code. Additionally, we used Github Copilot to help structure our code. 

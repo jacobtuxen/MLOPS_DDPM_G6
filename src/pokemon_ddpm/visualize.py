@@ -25,7 +25,7 @@ def visualize_datapoints(path: Path) -> None:
     plt.show()
 
 
-def model_samples(model, num_samples):
+def model_samples(model: any, num_samples: int) -> None:
     """Generate samples from the model."""
     model.eval()
     samples = model.sample(num_samples)

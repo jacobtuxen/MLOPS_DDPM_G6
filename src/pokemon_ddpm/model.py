@@ -21,7 +21,7 @@ class PokemonDDPM(LightningModule):
     def sample(self):
         return self.ddpm(batch_size=1, num_inference_steps=self.timesteps)
 
-    def training_step(self, batch, batch_idx):
+    def training_step(self, batch: int, batch_idx: int) -> torch.Tensor:
         images = batch
         noise = torch.randn_like(images)
         timesteps = torch.randint(0, self.timesteps, (images.shape[0],), device=noise.device)
@@ -31,7 +31,7 @@ class PokemonDDPM(LightningModule):
         self.log("train_loss", loss)
         return loss
 
-    def configure_optimizers(self):
+    def configure_optimizers(self) -> torch.optim.Optimizer:
         return torch.optim.AdamW(self.parameters(), lr=1e-4)
 
     def save_model(self, path) -> None:
