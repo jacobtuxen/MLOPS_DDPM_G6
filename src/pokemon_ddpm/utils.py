@@ -45,9 +45,9 @@ def setup_wandb_sweep(
     sweep_id = wandb.sweep(sweep=sweep_config, project=sweep_config.get("project", "pokemon-ddpm"))
 
     def sweep_train_fn():
-        model = PokemonDDPM(lr=config['lr'])
         wandb.init()
         config = wandb.config
+        model = PokemonDDPM(lr=config["lr"])
 
         train_fn(
             model=model,
