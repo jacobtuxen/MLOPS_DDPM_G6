@@ -6,7 +6,7 @@ Pillow==11.1.0
 pytest==7.4.3
 python-dotenv==1.0.1
 torch==2.2.2
-numpy<2
+numpy<3
 torchvision==0.17.2
 tqdm==4.67.1
 wandb==0.19.3
